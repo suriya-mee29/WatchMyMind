@@ -1,0 +1,27 @@
+/* 
+  Localizable.strings
+  WatchMyMind
+
+  Created by Suriya on 30/1/2564 BE.
+  
+*/
+
+"vc.placeholder.username" = "username" ;
+"vc.placeholder.password" = "plassword" ;
+"vc.placeholder.login" = "login" ;
+
+
+"vc.header.movement" = "movement" ;
+"vc.header.sleeping" = "sleeping" ;
+"vc.header.standing" = "standing" ;
+"vc.header.steping" = "steping" ;
+
+"vc.header.kcal" = "kcal";
+"vc.header.hr" = "hr" ;
+"vc.header.steps" = "steps";
+
+"vc.header.autoactivity" = "auto activity";
+"vc.header.manualctivity" = "manual activity";
+
+
+

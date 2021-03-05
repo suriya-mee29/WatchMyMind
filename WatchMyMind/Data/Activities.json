@@ -1,0 +1,17 @@
+[{
+    "id" : "1",
+    "title" : "Mindfulness",
+    "description" : "Mindfulness is the basic human ability to be fully present, aware of where we are and what we’re doing, and not overly reactive or overwhelmed by what’s going on around us. Mindfulness is a quality that every human being already possesses, it’s not something you have to conjure up, you just have to learn how to access it.",
+    "type": "AUTO",
+    "imageIcon" : "mindfulness",
+    "progrss": "43"
+},
+{
+    "id" : "2",
+    "title" : "Swimming",
+    "description" : "Swimming is an individual or team racing sport that requires the use of one's entire body to move through water. The sport takes place in pools or open water (e.g., in a sea or lake).",
+    "type": "AUTO",
+    "imageIcon" : "swimming",
+    "progrss": "25"
+}
+]

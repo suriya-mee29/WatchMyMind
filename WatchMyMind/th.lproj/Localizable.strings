@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  WatchMyMind
+
+  Created by Suriya on 30/1/2564 BE.
+  
+*/
+
+"vc.placeholder.username" = "ชื่อผู้ใช้" ;
+"vc.placeholder.password" = "รหัสผ่าน" ;
+"vc.placeholder.login" = "เข้าสู่ระบบ" ;
+
+"vc.header.movement" = "การเคลื่อนไหว" ;
+"vc.header.sleeping" = "การนอนหลับ" ;
+"vc.header.standing" = "การยืน" ;
+"vc.header.steping" = "จำนวนก้าว" ;
+"vc.header.kcal" = "กิโลเเคลอลอรี่";
+"vc.header.hr" = "ชั่วโมง" ;
+"vc.header.steps" = "ก้าว" ;
+
+"vc.header.autoactivity" = "กิจกรรมแบบสำเร็จ";
+"vc.header.manualctivity" = "กิจกรรมแบบสร้าง";
