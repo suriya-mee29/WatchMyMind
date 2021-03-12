@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import HealthKit
 
 struct LoadingView: View {
     // MARK: - PROPERTIES
@@ -19,8 +20,11 @@ struct LoadingView: View {
    
     var decription : String
     
-   
-    
+    // MARK: - FUNCTION
+    private func updateUIFromStatistics(_ StatisticsCollection : HKStatisticsCollection){
+        
+        
+    }
     // MARK: - BODY
     var body: some View {
         
@@ -35,6 +39,29 @@ struct LoadingView: View {
                     .fontWeight(.semibold)
                     .padding(.horizontal,30)
                    
+            Button(action: {
+                
+                if let healthStore = healthStore {
+                    healthStore.requestAuthorization { success in
+                        print("btn")
+                       // healthStore.testAnchoredQuery()
+                       // healthStore.getDailyMindfulnessTime2()
+                        //healthStore.startObservedMindful()
+                       /* healthStore.getDailyStanding { time in
+                            print(time.stringFromTimeInterval())
+                        }*/
+                        
+                        healthStore.getDailyMoving { summary in
+                            //let energyUnit = HKUnit.kilocalorie()
+                            print("dd")
+                            let value = summary?.activeEnergyBurned.doubleValue(for: HKUnit.kilocalorie())
+                            print(Double(value ?? 0 ))
+                        }
+                    }
+                }
+            }, label: {
+                Text("Button")
+            })
             Spacer()
             
             
@@ -46,7 +73,8 @@ struct LoadingView: View {
             if let healthStore = healthStore {
                 healthStore.requestAuthorization { success in
                     if success {
-                        healthStore.getDailyMindfulnessTime { time in
+                       // healthStore.getDailyMindfulnessTime2()
+                       /* healthStore.getDailyMindfulnessTime { time in
                             print("\(time)")
                             
                             if !time.isEqual(to: 0.0){
@@ -74,7 +102,7 @@ struct LoadingView: View {
                                 print(showModal)
                             }
                             
-                        }
+                        }*/
                        
                            
                     } //: SUCCESS

@@ -50,7 +50,7 @@ struct HomeView: View {
                         
                         
                     }//: VSTACK
-                    .background(Color("").ignoresSafeArea(.all,edges: .all))
+                    .background(Color("bw").ignoresSafeArea(.all,edges: .all))
                     
                 
                 }//: ZSTACK

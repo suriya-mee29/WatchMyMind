@@ -13,8 +13,7 @@ struct LoginView: View {
     @State private var password : String = ""
     // MARK: - BODY
     var body: some View {
-     
-            
+        
             VStack {
                 Text("watch my mind".uppercased())
                     .font(.title)

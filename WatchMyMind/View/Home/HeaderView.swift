@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+import HealthKit
 
 struct HeaderView: View {
     // MARK: - PROPERTIES
+    var healthStore : HealthStore? = HealthStore()
     @State private var isAnimated : Bool = false
+    @State private var moveing : Int = 0
+    @State private var sleeping : Int = 7
+    @State private var standing : String = "1.0"
+    @State private var steping : Int = 100
     // MARK: - <#BODY#>
     var body: some View {
         ZStack {
@@ -46,7 +52,7 @@ struct HeaderView: View {
                             .font(.title2)
                             .foregroundColor(Color("move"))
                         
-                        Text("\(L10n.Header.movement) 500 \(L10n.Header.kcal)".uppercased())
+                        Text("\(L10n.Header.movement) \(moveing) \(L10n.Header.kcal)".uppercased())
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(Color("move"))
@@ -66,7 +72,7 @@ struct HeaderView: View {
                         Image(systemName: "figure.stand")
                             .font(.title2)
                             .foregroundColor(Color("stand"))
-                        Text("\(L10n.Header.standing) 1 \(L10n.Header.hr)".uppercased())
+                        Text("\(L10n.Header.standing) \(self.standing) \(L10n.Header.hr)".uppercased())
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(Color("stand"))
@@ -76,7 +82,7 @@ struct HeaderView: View {
                         Image(systemName: "figure.walk")
                             .font(.title2)
                             .foregroundColor(Color("step"))
-                        Text("\(L10n.Header.steping) 500 \(L10n.Header.steps)".uppercased())
+                        Text("\(L10n.Header.steping) \(self.steping)  \(L10n.Header.steps)".uppercased())
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(Color("step"))
@@ -88,6 +94,36 @@ struct HeaderView: View {
             }// VSTACK
             .background(Color("wmm"))
             .clipShape(CustomShape())
+            .onAppear(perform: {
+                if let healthStore = healthStore {
+                    healthStore.requestAuthorization { success in
+                        //Activity burned
+                        healthStore.getDailyMoving { summary in
+                            self.moveing = Int(summary?.activeEnergyBurned.doubleValue(for: HKUnit.kilocalorie()) ?? 0)
+                            
+                        }
+ 
+                        //Sleeping
+                        
+                        //Standing
+                        healthStore.getDailyStanding { standTime in
+                            self.standing = standTime.stringFromTimeInterval()
+                        }
+                        //Steping
+                        let startDate  = Calendar.current.date(byAdding: .day,value: -1, to: Date())!
+                        
+                        healthStore.calculateSteps{ statisticsCollection in
+                            
+                            statisticsCollection?.enumerateStatistics(from: startDate, to: Date(), with: { (statistic, stop) in
+                                let count = statistic.sumQuantity()?.doubleValue(for: .count())
+                                self.steping = Int(count ?? 0)
+                            })
+                            
+                            
+                        }
+                    }
+                }
+            })
             
         }
         
