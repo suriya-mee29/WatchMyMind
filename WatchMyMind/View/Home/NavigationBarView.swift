@@ -13,10 +13,13 @@ struct NavigationBarView: View {
     var body: some View {
         HStack{
             Spacer()
-            Button(action:{} , label : {
+            Button(action:{
+                print("logout")
+            } , label : {
                 Image(systemName: "arrow.right.square")
                     .font(.title)
                     .foregroundColor(Color.gray)
+                    .padding(.top)
                     
             }) //BUTTON
             .padding()

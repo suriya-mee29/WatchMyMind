@@ -20,8 +20,7 @@ struct HeaderView: View {
     // MARK: - <#BODY#>
     var body: some View {
         ZStack {
-            VStack {
-                
+            VStack (alignment: .leading){
                 Text("WatchMyMind".uppercased())
                     .font(.title3)
                     .fontWeight(.black)
@@ -38,23 +37,26 @@ struct HeaderView: View {
                     .onDisappear(perform: {
                         isAnimated = false
                     })
+                    .padding(.horizontal, UIScreen.main.bounds.width * 0.30)
                 
                 Text("Suriya   Meekhunthod")
-                    .font(.largeTitle)
+                    .font(.title)
                     .fontWeight(.bold)
                     .lineLimit(2)
                     .padding()
                     .foregroundColor(.white)
                     .frame(width: UIScreen.main.bounds.width)
-                    .padding(.top , UIScreen.main.bounds.height * 0.025)
+                    
                 VStack (alignment: .leading ){
+                    
                     HStack{
                         Image(systemName: "flame.fill")
-                            .font(.title2)
+                            .font(.title3)
                             .foregroundColor(Color("move"))
+                       
                         
                         Text("\(L10n.Header.movement) \(moveing) \(L10n.Header.kcal)".uppercased())
-                            .font(.title2)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(Color("move"))
                     }
@@ -62,10 +64,10 @@ struct HeaderView: View {
                     //in bed
                     HStack{
                         Image(systemName: "bed.double.fill")
-                            .font(.title2)
+                            .font(.title3)
                             .foregroundColor(Color("sleep"))
                         Text("\(L10n.Header.inbed) \(self.inBad) \(L10n.Header.hr)".uppercased())
-                            .font(.title2)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(Color("sleep"))
                     }
@@ -73,37 +75,40 @@ struct HeaderView: View {
                     // a sleep
                     HStack{
                         Image(systemName: "powersleep")
-                            .font(.title2)
+                            .font(.title3)
                             .foregroundColor(Color("sleep"))
                         Text("\(L10n.Header.asleep) \(self.aSleep) \(L10n.Header.hr)".uppercased())
-                            .font(.title2)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(Color("sleep"))
                     }
                     .padding(.bottom,1)
                     HStack{
                         Image(systemName: "figure.stand")
-                            .font(.title2)
+                            .font(.title3)
                             .foregroundColor(Color("stand"))
                         Text("\(L10n.Header.standing) \(self.standing) \(L10n.Header.hr)".uppercased())
-                            .font(.title2)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(Color("stand"))
                     }
                     .padding(.bottom , 1)
                     HStack{
                         Image(systemName: "figure.walk")
-                            .font(.title2)
+                            .font(.title3)
                             .foregroundColor(Color("step"))
                         Text("\(L10n.Header.steping) \(self.steping)  \(L10n.Header.steps)".uppercased())
-                            .font(.title2)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(Color("step"))
                     }
                     .padding(.bottom,1)
                     
+                    
                 }
-                .padding(.bottom,70)
+                .padding(.bottom,30)
+                .padding(.horizontal
+                )
             }// VSTACK
             .background(Color("wmm"))
             .clipShape(CustomShape())

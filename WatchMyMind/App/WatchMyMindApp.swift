@@ -14,7 +14,7 @@ struct WatchMyMindApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            MainView()
                 .environment(\.managedObjectContext, presistenContainer.container.viewContext)
         }
         .onChange(of: scenePhase) { (phase) in
