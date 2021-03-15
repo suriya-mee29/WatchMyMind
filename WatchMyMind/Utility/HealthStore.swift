@@ -19,7 +19,7 @@ class HealthStore {
     let mindfulType = HKSampleType.categoryType(forIdentifier: .mindfulSession)!
     let standType = HKQuantityType.quantityType(forIdentifier: .appleStandTime)!
     let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-    let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
+    let sleepType =  HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
     let activityType = HKObjectType.activitySummaryType()
     
     
@@ -43,9 +43,39 @@ class HealthStore {
         }
     }
     // MARK: - Calculate Sleeping
-    func getDailySleeping(){
+    
+    func getDailySleeping(compleion: @escaping([HKSample])-> Void){
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+     
+        let startDate = Calendar.current.startOfDay(for: Date())
+        let endDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate)
         
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate)
+        
+        querySampleQuery = HKSampleQuery(sampleType: sleepType, predicate: predicate, limit: 30, sortDescriptors: [sortDescriptor], resultsHandler: { (query, results, error) in
+            
+            
+            if error != nil {
+                print(" HealthKit returned error while trying to query today's mindful sessions. The error was: \(String(describing: error?.localizedDescription))")
+            }
+            
+            if let results = results {
+            compleion(results)
+            } else {
+                compleion([])
+            }
+            
+            
+            
+            
+        })
+        
+        if let healthStore = self.healthStore , let querySampleQuery = self.querySampleQuery {
+            
+            healthStore.execute(querySampleQuery)
+        }
     }
+    
     // MARK: - Calculate Moving
     func getDailyMoving (completion : @escaping(HKActivitySummary?)->Void){
         let calendar = Calendar.autoupdatingCurrent
@@ -78,6 +108,7 @@ class HealthStore {
         
         
     }
+    
     // MARK: - Calculate hr. of standing
     func calculateStanding(completion : @escaping(HKStatisticsCollection?)->Void){
         let calendar = Calendar.autoupdatingCurrent
@@ -234,7 +265,7 @@ class HealthStore {
        
   }
     func testAnchoredQuery(){
-        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+    
         let startDate = Calendar.current.startOfDay(for: Date())
         let endDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate)
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
@@ -244,7 +275,7 @@ class HealthStore {
                                               predicate: predicate,
                                               anchor: anchor,
             limit: HKObjectQueryNoLimit) { (query, samplesOrNil, deletedObjectsOrNil, newAnchor, errorOrNil) in
-                    guard let samples = samplesOrNil, let deletedObjects = deletedObjectsOrNil else {
+                    guard let samples = samplesOrNil else {
                         fatalError("*** An error occurred during the initial query: \(errorOrNil!.localizedDescription) ***")
                     }
                     anchor = newAnchor!
@@ -254,7 +285,7 @@ class HealthStore {
         
         query.updateHandler = { (query, samplesOrNil, deletedObjectsOrNil, newAnchor, errorOrNil) in
         
-               guard let samples = samplesOrNil, let deletedObjects = deletedObjectsOrNil else {
+               guard let samples = samplesOrNil else {
                    // Handle the error here.
                    fatalError("*** An error occurred during an update: \(errorOrNil!.localizedDescription) ***")
                }

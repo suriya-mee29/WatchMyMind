@@ -13,7 +13,8 @@ struct HeaderView: View {
     var healthStore : HealthStore? = HealthStore()
     @State private var isAnimated : Bool = false
     @State private var moveing : Int = 0
-    @State private var sleeping : Int = 7
+    @State private var aSleep : String = "No data"
+    @State private var inBad : String = "No data"
     @State private var standing : String = "1.0"
     @State private var steping : Int = 100
     // MARK: - <#BODY#>
@@ -48,7 +49,7 @@ struct HeaderView: View {
                     .padding(.top , UIScreen.main.bounds.height * 0.025)
                 VStack (alignment: .leading ){
                     HStack{
-                        Image(systemName: "arrow.right")
+                        Image(systemName: "flame.fill")
                             .font(.title2)
                             .foregroundColor(Color("move"))
                         
@@ -58,11 +59,23 @@ struct HeaderView: View {
                             .foregroundColor(Color("move"))
                     }
                     .padding(.bottom,1)
+                    //in bed
                     HStack{
                         Image(systemName: "bed.double.fill")
                             .font(.title2)
                             .foregroundColor(Color("sleep"))
-                        Text("\(L10n.Header.sleeping) 7 \(L10n.Header.hr)".uppercased())
+                        Text("\(L10n.Header.inbed) \(self.inBad) \(L10n.Header.hr)".uppercased())
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("sleep"))
+                    }
+                    .padding(.bottom,1)
+                    // a sleep
+                    HStack{
+                        Image(systemName: "powersleep")
+                            .font(.title2)
+                            .foregroundColor(Color("sleep"))
+                        Text("\(L10n.Header.asleep) \(self.aSleep) \(L10n.Header.hr)".uppercased())
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(Color("sleep"))
@@ -104,6 +117,50 @@ struct HeaderView: View {
                         }
  
                         //Sleeping
+                        healthStore.getDailySleeping { samples in
+                           // let startDate = Calendar.current.startOfDay(for: Date())
+                            var asleep_ :TimeInterval = 0
+                            var inbed_ :TimeInterval = 0
+                            
+                            if samples.count > 0{
+                                for sample in samples {
+                                    if let categorySample = sample as? HKCategorySample{
+                                        if categorySample.value == HKCategoryValueSleepAnalysis.inBed.rawValue{
+                                            //inBed
+                                            inbed_ += categorySample.endDate.timeIntervalSince(categorySample.startDate)
+                                          
+                                        }else{
+                                            //asleep
+                                            asleep_ += categorySample.endDate.timeIntervalSince(categorySample.startDate)
+                                            
+                                        }
+                                    }else{
+                                        asleep_ = 0
+                                        inbed_ = 0
+                                    }
+                                    
+                                }
+                                
+                                //finaly
+                                if asleep_ != 0 {
+                                    self.aSleep = "\(asleep_.stringFromTimeInterval())"
+                                    
+                                }else{
+                                    self.aSleep = "No data"
+                                }
+                                if inbed_ != 0 {
+                                    self.inBad = "\(inbed_.stringFromTimeInterval())"
+                                }else{
+                                    self.inBad = "No data"
+                                }
+                                
+                            }else{
+                                self.aSleep = "No data"
+                                self.inBad = "No data"
+                            }
+                            
+                        }
+                        
                         
                         //Standing
                         healthStore.getDailyStanding { standTime in

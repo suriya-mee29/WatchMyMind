@@ -11,8 +11,9 @@
 "vc.placeholder.login" = "login" ;
 
 
-"vc.header.movement" = "movement" ;
-"vc.header.sleeping" = "sleeping" ;
+"vc.header.movement" = "burning" ;
+"vc.header.sleeping.asleep" = "Asleep" ;
+"vc.header.sleeping.inbed" = "Inbed" ;
 "vc.header.standing" = "standing" ;
 "vc.header.steping" = "steping" ;
 

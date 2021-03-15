@@ -32,8 +32,8 @@ extension TimeInterval{
 
             let time = NSInteger(self)
 
-            let ms = Int((self.truncatingRemainder(dividingBy: 1)) * 1000)
-            let seconds = time % 60
+           // let ms = Int((self.truncatingRemainder(dividingBy: 1)) * 1000)
+            //let seconds = time % 60
             let minutes = (time / 60) % 60
             let hours = (time / 3600)
 
@@ -41,4 +41,24 @@ extension TimeInterval{
           //  return String(hours)
 
         }
+}
+
+extension Date {
+    static var yesterday: Date { return Date().dayBefore }
+    static var tomorrow:  Date { return Date().dayAfter }
+    var dayBefore: Date {
+        return Calendar.current.date(byAdding: .day, value: -1, to: noon)!
+    }
+    var dayAfter: Date {
+        return Calendar.current.date(byAdding: .day, value: 1, to: noon)!
+    }
+    var noon: Date {
+        return Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: self)!
+    }
+    var month: Int {
+        return Calendar.current.component(.month,  from: self)
+    }
+    var isLastDayOfMonth: Bool {
+        return dayAfter.month != month
+    }
 }

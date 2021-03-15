@@ -14,7 +14,8 @@ class L10n {
     }
     class Header {
         static let movement = NSLocalizedString("vc.header.movement", comment: "")
-        static let sleeping = NSLocalizedString("vc.header.sleeping", comment: "")
+        static let asleep = NSLocalizedString("vc.header.sleeping.asleep", comment: "")
+        static let inbed = NSLocalizedString("vc.header.sleeping.inbed", comment: "")
         static let standing = NSLocalizedString("vc.header.standing", comment: "")
         static let steping = NSLocalizedString("vc.header.steping", comment: "")
         

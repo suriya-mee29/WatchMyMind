@@ -51,12 +51,14 @@ struct LoadingView: View {
                             print(time.stringFromTimeInterval())
                         }*/
                         
-                        healthStore.getDailyMoving { summary in
+                      /*  healthStore.getDailyMoving { summary in
                             //let energyUnit = HKUnit.kilocalorie()
                             print("dd")
                             let value = summary?.activeEnergyBurned.doubleValue(for: HKUnit.kilocalorie())
                             print(Double(value ?? 0 ))
-                        }
+                        }*/
+                        
+                       // healthStore.getsleep()
                     }
                 }
             }, label: {

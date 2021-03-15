@@ -10,8 +10,9 @@
 "vc.placeholder.password" = "รหัสผ่าน" ;
 "vc.placeholder.login" = "เข้าสู่ระบบ" ;
 
-"vc.header.movement" = "การเคลื่อนไหว" ;
-"vc.header.sleeping" = "การนอนหลับ" ;
+"vc.header.movement" = "การเผาผลาญ" ;
+"vc.header.sleeping.asleep" = "เวลาหลับ" ;
+"vc.header.sleeping.inbed" = "เวลาบนเตียง" ;
 "vc.header.standing" = "การยืน" ;
 "vc.header.steping" = "จำนวนก้าว" ;
 "vc.header.kcal" = "กิโลเเคลอลอรี่";
