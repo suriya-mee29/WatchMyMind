@@ -39,13 +39,17 @@ struct HeaderView: View {
                     })
                     .padding(.horizontal, UIScreen.main.bounds.width * 0.30)
                 
-                Text("Suriya   Meekhunthod")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .lineLimit(2)
-                    .padding()
-                    .foregroundColor(.white)
-                    .frame(width: UIScreen.main.bounds.width)
+              
+                
+                   
+                    Text("Suriya   Meekhunthod")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .lineLimit(2)
+                        .padding()
+                        .foregroundColor(.white)
+                        .frame(width: UIScreen.main.bounds.width)
+             
                     
                 VStack (alignment: .leading ){
                     
