@@ -40,7 +40,7 @@ struct ActivityCardGroupView: View {
                             NavigationLink(
                                 destination:
                                     
-                                    DescriptionView(imageIcon: item.imageIcon, title: item.title, description: item.description, navigationTag: .TO_BIODATA_VIEW)
+                                    DescriptionView(activity: item, navigationTag: .TO_BIODATA_VIEW)
                                     .environment(\.managedObjectContext, viewContext)
                                 ,
                                 label: {

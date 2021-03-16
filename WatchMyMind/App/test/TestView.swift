@@ -6,41 +6,23 @@
 //
 
 import SwiftUI
-import CombineSchedulers
+
 
 
 struct TestView: View {
-    private var healthStore : HealthStore?
-    @State private var data : String = "0"
-    init() {
-        healthStore = HealthStore()
-    }
-    func test(){
-        
-        
-    
-    }
-    
+    @ObservedObject var messageMV : messageModelView
+   
     var body: some View {
         VStack {
-            Text(data)
-               
-        }
-        .onAppear(perform: {
-            if let healthStore = healthStore {
-                healthStore.requestAuthorization { success in
-                    if success {
-                        healthStore.getDailyMindfulnessTime { time in
-                            data = "\(time.isEqual(to: 0.0))"
-                        }
-                       
-                           
-                    } //: SUCCESS
-                     
-                }
-            }
-            
-    }) // onApprar
+                 TextField("Message Content", text: $messageMV.textFieldValue)
+                 
+                 Button(action: {
+                     self.messageMV.sendMessage()
+                 }) {
+                     Text("Send Message")
+                 }
+             }
+        
         
         
     }
@@ -48,6 +30,7 @@ struct TestView: View {
 
 struct TestView_Previews: PreviewProvider {
     static var previews: some View {
-        TestView()
+       // TestView()
+        Text("dd")
     }
 }

@@ -16,6 +16,9 @@ struct BioDataListView: View {
     @FetchRequest(sortDescriptors: [])
     var MindfulnessCollection : FetchedResults<Mindfulness>
     @State private var isPresented = true
+    @State private var hasdone : Int = 0
+    
+    var healthStore = HealthStore()
     // MARK: - CONSTRUCTOR
     init(headline: String) {
         self.headLine = headline
@@ -24,6 +27,25 @@ struct BioDataListView: View {
     }
    
     // MARK: - FUNCTION
+    private func fetchData(){
+        
+        var arrMindFul = [MindfulnessModel]()
+        healthStore.mindfultime(startDate: Date() , numberOfday: -7) { (samples) in
+            for sample in samples {
+                print("\(dateFormatter.string(from: sample!.startDate))")
+                guard  let uuid = sample?.uuid else {return}
+                guard let time = sample?.endDate.timeIntervalSince(sample!.startDate) else{return}
+                guard let date = sample?.startDate else {return}
+                
+                let mif  = MindfulnessModel(id: uuid , date: date, time: Int32(time / 60))
+                arrMindFul.append( mif )
+            }
+            mindfulnessMV.setMindfulness(newData: arrMindFul)
+        }
+        healthStore.calculateMindfulTime(startDate: Date(), numberOfday: -7) { (time) in
+            self.hasdone = Int(time / 60)
+        }
+    }
     private func loadData(){
         var arr = [MindfulnessModel]()
         if MindfulnessCollection.count != 0 {
@@ -50,8 +72,20 @@ struct BioDataListView: View {
                     .padding(.bottom)
                     .padding(.top ,
                              UIApplication.shared.windows.first?.safeAreaInsets.top)
+                
+              
                 ScrollView(.vertical, showsIndicators: true){
-                   
+                    
+                    HStack {
+                        Image(systemName: "hourglass.bottomhalf.fill")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                        Text("You might close this app to get a new snapshot data")
+                            
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal)
                     ForEach(self.mindfulnessMV.mindfulnessArr){ data in
                         BioDataCardIView(title: "breathing", breating: "\(data.time)", date: data.date)
                         
@@ -71,26 +105,19 @@ struct BioDataListView: View {
                 
         }//: ZSTACK
         .ignoresSafeArea(.all , edges : .top)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: {
-                    
-                }, label: {
-                    Image(systemName: "plus")
-                })
-                            }
-            }//: TOOL BAR
+       
         .fullScreenCover(isPresented: $isPresented, content: {
             LoadingView(showModal: self.$isPresented, decription: "please use your Apple Watch to complete an activity by use The Breathe app").environment(\.managedObjectContext, viewContext)
         })
         .onAppear(perform: {
             print("OnAppear in loadData")
-            loadData()
+            fetchData()
+          
             
         })
         .onChange(of: isPresented, perform: { value in
             print("chang")
-            loadData()
+           fetchData()
         })
         
        

@@ -10,9 +10,7 @@ import SwiftUI
 struct DescriptionView: View {
     // MARK: - PROPERTIES
     @State private var isAnnimatingImage : Bool = false
-    let imageIcon : String
-    let title : String
-    let description : String
+    let activity : Activity
     let navigationTag : NavigationTag
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -31,7 +29,7 @@ struct DescriptionView: View {
                         .padding(.bottom)
                         .padding(.top ,
                                  UIApplication.shared.windows.first?.safeAreaInsets.top)
-                    Image(imageIcon)
+                    Image(activity.imageIcon)
                         .resizable()
                         .scaledToFit()
                         .foregroundColor(Color("wmm"))
@@ -48,13 +46,13 @@ struct DescriptionView: View {
                         })
                        
                     ScrollView(.vertical, showsIndicators: false, content: {
-                        Text(title.uppercased())
+                        Text(activity.title.uppercased())
                             .font(.title2)
                             .fontWeight(.medium)
                             .foregroundColor(Color("wmm"))
                        
                             
-                            Text(description)
+                        Text(activity.description)
                                 .font(.body)
                                 .padding(.horizontal , UIScreen.main.bounds.width * 0.1)
                                 .foregroundColor(.gray)
@@ -107,7 +105,7 @@ struct DescriptionView: View {
 // MARK: -PREVIEW
 struct DescriptionView_Previews: PreviewProvider {
     static var previews: some View {
-        DescriptionView(imageIcon: "hobby", title: "swimming", description: "Faster music can make you feel more alert and concentrate better.", navigationTag: .TO_BIODATA_VIEW)
+        DescriptionView(activity: Activity(id: "112", title: "swimming", description: "Faster music can make you feel more alert and concentrate better.", type: "AUTO", imageIcon: "swimming", progrss: "34"), navigationTag: .TO_BIODATA_VIEW)
             .preferredColorScheme(.light)
             
     }

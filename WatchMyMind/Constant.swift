@@ -34,6 +34,12 @@ let taskDateFormat: DateFormatter = {
        formatter.dateStyle = .long
        return formatter
    }()
+let dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.timeZone = TimeZone(secondsFromGMT: 7)
+    formatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
+    return formatter
+}()
 
 enum NavigationTag : Int {
     case TO_BIODATA_VIEW = 1

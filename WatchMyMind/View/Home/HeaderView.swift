@@ -37,7 +37,7 @@ struct HeaderView: View {
                     .onDisappear(perform: {
                         isAnimated = false
                     })
-                    .padding(.horizontal, UIScreen.main.bounds.width * 0.30)
+                    .padding(.horizontal, UIScreen.main.bounds.width * 0.28)
                 
               
                 

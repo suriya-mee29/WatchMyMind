@@ -14,7 +14,7 @@ class HealthStore {
     var summaryQuery : HKActivitySummaryQuery?
     var mindfulObserverQuery : HKObserverQuery?
     
-    var totalTime = TimeInterval()
+  
     
     let mindfulType = HKSampleType.categoryType(forIdentifier: .mindfulSession)!
     let standType = HKQuantityType.quantityType(forIdentifier: .appleStandTime)!
@@ -184,13 +184,41 @@ class HealthStore {
     
     // MARK: - MINDFULNESS V1
     // DailyMindfulnessTime
-    func getDailyMindfulnessTime(completion: @escaping (TimeInterval) -> Void) {
+    func mindfultime(startDate : Date , numberOfday:Int ,completion: @escaping([HKSample?])-> Void){
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        
+        let endDate = Calendar.current.date(byAdding: .day , value: numberOfday, to: startDate)
+        
+        let predicate = HKQuery.predicateForSamples(withStart: endDate, end: startDate, options: .strictStartDate)
 
+        querySampleQuery = HKSampleQuery(sampleType: mindfulType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { (_, results, error) in
+           
+           if error != nil {
+               print(" HealthKit returned error while trying to query today's mindful sessions. The error was: \(String(describing: error?.localizedDescription))")
+           }
+           
+           
+           if let results = results {
+              
+               completion(results)
                
-                let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-                let startDate = Calendar.current.startOfDay(for: Date())
-                let endDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate)
-                let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+           } else {
+               completion([])
+           }
+       }
+
+
+   if let healthStore = self.healthStore, let querySampleQuery  = self.querySampleQuery {
+   healthStore.execute(querySampleQuery)
+       }
+        
+     
+    }
+    func calculateMindfulTime(startDate : Date , numberOfday:Int ,completion: @escaping (TimeInterval) -> Void) {
+            let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+            let endDate = Calendar.current.date(byAdding: .day , value: numberOfday, to: startDate)
+        
+        let predicate = HKQuery.predicateForSamples(withStart: endDate, end: startDate, options: .strictStartDate)
 
                  querySampleQuery = HKSampleQuery(sampleType: mindfulType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { (_, results, error) in
                     
@@ -198,7 +226,10 @@ class HealthStore {
                         print(" HealthKit returned error while trying to query today's mindful sessions. The error was: \(String(describing: error?.localizedDescription))")
                     }
                     
+                    
+                    
                     if let results = results {
+                        print("\(results.count)")
                         var totalTime = TimeInterval()
                         for result in results {
                             totalTime += result.endDate.timeIntervalSince(result.startDate)
