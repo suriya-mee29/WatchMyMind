@@ -6,23 +6,39 @@
 //
 
 import SwiftUI
-
+import CombineSchedulers
 
 
 struct TestView: View {
-    @ObservedObject var messageMV : messageModelView
-   
+    private var healthStore : HealthStore?
+    @ObservedObject var autoActivityStore : AutoActivityStore
+    @State private var data : String = "0"
+    init() {
+        healthStore = HealthStore()
+        autoActivityStore = AutoActivityStore(autoActivityCollection: [])
+    }
+    func test(){
+        
+        
+    
+    }
+    
     var body: some View {
         VStack {
-                 TextField("Message Content", text: $messageMV.textFieldValue)
-                 
-                 Button(action: {
-                     self.messageMV.sendMessage()
-                 }) {
-                     Text("Send Message")
-                 }
-             }
-        
+            Text(data)
+            Button(action: {
+                self.autoActivityStore.displayData()
+            }, label: {
+                /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
+            })
+               
+        }
+        .onAppear(perform: {
+            autoActivityStore.loadData(startDate: Date(), numberOfObserved: -7)
+            autoActivityStore.displayData()
+           
+    }) // onApprar
+       
         
         
     }
@@ -30,7 +46,6 @@ struct TestView: View {
 
 struct TestView_Previews: PreviewProvider {
     static var previews: some View {
-       // TestView()
-        Text("dd")
+        TestView()
     }
 }

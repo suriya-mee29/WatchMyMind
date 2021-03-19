@@ -24,7 +24,7 @@ struct NavView: View {
                 EmptyView()
             }
             NavigationLink(destination:
-                            BioDataListView(headline: "BREATHING").environment(\.managedObjectContext, viewContext)
+                            BioDataListView(headline: "BREATHING", isActivity: false).environment(\.managedObjectContext, viewContext)
                            , tag: 2, selection: $action){
                 EmptyView()
                 

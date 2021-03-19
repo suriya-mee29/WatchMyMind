@@ -7,6 +7,7 @@
 
 import SwiftUI
 import HealthKit
+import UserNotifications
 
 struct LoadingView: View {
     // MARK: - PROPERTIES
@@ -47,13 +48,14 @@ struct LoadingView: View {
                         .font(.headline)
                         .fontWeight(.black)
                         .foregroundColor(.white)
-                        
+                        .padding(.horizontal)
                 })
                 .padding()
             } //ZSTACK OF BTN
             .background(Color("wmm"))
             .clipShape(Capsule())
             .padding()
+           
             Spacer()
             
             

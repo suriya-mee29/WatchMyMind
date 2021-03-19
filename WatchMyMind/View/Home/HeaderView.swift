@@ -38,10 +38,8 @@ struct HeaderView: View {
                         isAnimated = false
                     })
                     .padding(.horizontal, UIScreen.main.bounds.width * 0.28)
+
                 
-              
-                
-                   
                     Text("Suriya   Meekhunthod")
                         .font(.title)
                         .fontWeight(.bold)

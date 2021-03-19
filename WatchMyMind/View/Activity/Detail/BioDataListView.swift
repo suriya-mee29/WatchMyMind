@@ -10,20 +10,25 @@ import SwiftUI
 struct BioDataListView: View {
     // MARK: - PROPERTIES
     let headLine : String
+    let isActivity : Bool
     @State var mindfulnessArr = [MindfulnessModel]()
     @ObservedObject var mindfulnessMV : MindfulnessStore
+    @ObservedObject var autoActivityStore : AutoActivityStore
+    
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(sortDescriptors: [])
     var MindfulnessCollection : FetchedResults<Mindfulness>
     @State private var isPresented = true
     @State private var hasdone : Int = 0
     
+    
     var healthStore = HealthStore()
     // MARK: - CONSTRUCTOR
-    init(headline: String) {
+    init(headline: String, isActivity : Bool) {
         self.headLine = headline
         mindfulnessMV = MindfulnessStore(MindfulnessArr: [])
-       
+        self.isActivity = isActivity
+        autoActivityStore = AutoActivityStore(autoActivityCollection: [])
     }
    
     // MARK: - FUNCTION
@@ -31,8 +36,9 @@ struct BioDataListView: View {
         
         var arrMindFul = [MindfulnessModel]()
         healthStore.mindfultime(startDate: Date() , numberOfday: -7) { (samples) in
+            
             for sample in samples {
-                print("\(dateFormatter.string(from: sample!.startDate))")
+               
                 guard  let uuid = sample?.uuid else {return}
                 guard let time = sample?.endDate.timeIntervalSince(sample!.startDate) else{return}
                 guard let date = sample?.startDate else {return}
@@ -47,20 +53,7 @@ struct BioDataListView: View {
         }
     }
     private func loadData(){
-        var arr = [MindfulnessModel]()
-        if MindfulnessCollection.count != 0 {
-            MindfulnessCollection.forEach { mf in
-                guard let id = mf.id else {return}
-                guard let date = mf.date else {return}
-                let time = mf.time
-                arr.append(MindfulnessModel(id: id, date: date, time: time))
-            }//: LOOP
-            self.mindfulnessMV.setMindfulness(newData: arr)
-        }else{
-           //base case
-            print("base case --> one")
-        }
-       
+        
     }
     // MARK: - BODY
     var body: some View {
@@ -86,10 +79,26 @@ struct BioDataListView: View {
                             .foregroundColor(.secondary)
                     }
                     .padding(.horizontal)
+                    
+                    if !isActivity {
                     ForEach(self.mindfulnessMV.mindfulnessArr){ data in
-                        BioDataCardIView(title: "breathing", breating: "\(data.time)", date: data.date)
+                        BioDataCardIView(title: "breathing", imageIcon: "lungs", value: "\(data.time)", date: data.date)
                         
                     }//: LOOP
+                    }else{
+                        
+                                ForEach(self.autoActivityStore.autoActivityCollection){ data in
+                                    
+                                    NavigationLink(
+                                        destination: MoreBioDataView(sample: data.workOut, hrv: data.avgHeartRate),
+                                        label: {
+                                            BioDataCardIView(title: data.workOut.workoutActivityType.name, imageIcon: data.workOut.workoutActivityType.associatedIcon!, value: "\(Int(data.avgHeartRate)) BMP", date:data.workOut.startDate)
+                                        })
+                                   
+                                     
+                           
+                                }
+                    }
                         
                 }//: SCROLL VIEW
                     
@@ -110,14 +119,14 @@ struct BioDataListView: View {
             LoadingView(showModal: self.$isPresented, decription: "please use your Apple Watch to complete an activity by use The Breathe app").environment(\.managedObjectContext, viewContext)
         })
         .onAppear(perform: {
-            print("OnAppear in loadData")
             fetchData()
+            self.autoActivityStore.loadData(startDate: Date(), numberOfObserved: -30)
           
             
         })
         .onChange(of: isPresented, perform: { value in
-            print("chang")
            fetchData()
+           self.autoActivityStore.loadData(startDate: Date(), numberOfObserved: -30)
         })
         
        
@@ -127,7 +136,7 @@ struct BioDataListView: View {
 // MARK: -PREVIEW
 struct BioDataListView_Previews: PreviewProvider {
     static var previews: some View {
-        BioDataListView(headline: "BREATHING")
+        BioDataListView(headline: "BREATHING", isActivity: true)
             
     }
 }

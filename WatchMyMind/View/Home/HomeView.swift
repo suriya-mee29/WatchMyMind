@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import HealthKit
 
 struct HomeView: View {
     
@@ -14,6 +15,8 @@ struct HomeView: View {
     @State public var showDescriptionView: Bool = false
     @State var isNewTripPresented = false
     @Environment(\.managedObjectContext) private var viewContext
+    
+    var healthStore = HealthStore()
     
     // MARK: - BODY
     var body: some View {
@@ -55,9 +58,26 @@ struct HomeView: View {
                 }//: ZSTACK
             .ignoresSafeArea(.all , edges: .top)
         }//: NAVIGITION
-        
+        .onAppear(perform: {
+            healthStore.requestAuthorization { seccess in
+                if seccess {
+                    healthStore.calculateWorkout2(startDate: Date(), numberOfObserved: -3){ samples in
+                       
+                       
+                        for sample in samples!{
+                          
+                            
+                    }
+                    print("secess")
+                }
+                
         }
+        
+            }
+            
+        })
        
+}
 }
    // MARK: -<#PREVIEW#>
 struct HomeView_Previews: PreviewProvider {

@@ -69,10 +69,18 @@ struct DescriptionView: View {
                     
                     
                   Spacer()
+                    
                     NavigationLink(destination: 
-                    BioDataListView(headline: "BREATHING")
+                                    BioDataListView(headline: "BREATHING", isActivity: false)
                         .environment(\.managedObjectContext, viewContext)
                                    , tag: 1, selection: $action){
+                        EmptyView()
+                        
+                    }
+                    NavigationLink(destination:
+                                    BioDataListView(headline: "EXERCISE", isActivity: true)
+                        .environment(\.managedObjectContext, viewContext)
+                                   , tag: 2, selection: $action){
                         EmptyView()
                         
                     }
@@ -81,6 +89,13 @@ struct DescriptionView: View {
                     //START BTN
                     Button(action: {
                         self.action = navigationTag.rawValue
+                        if action == NavigationTag.TO_BIODATA_VIEW.rawValue {
+                            if activity.title == "Exercise" {
+                                self.action = 2
+                            }else{
+                                // not do something
+                            }
+                        }
                     }, label: {
                         HStack{
                             Text("start".uppercased())
@@ -93,7 +108,7 @@ struct DescriptionView: View {
                     })
                     .background(Color("wmm"))
                     .clipShape(Capsule())
-                    .shadow(color: Color.gray.opacity(0.5), radius: 2, x: 0, y: 5)
+                  //  .shadow(color: Color.gray.opacity(0.5), radius: 2, x: 0, y: 5)
                     //: Btton
                 }
                

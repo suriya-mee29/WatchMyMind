@@ -34,7 +34,7 @@ struct BioDataCardTitleView: View {
             Image(systemName: imageIcon)
                 .resizable()
                 .scaledToFit()
-                .frame(width: UIScreen.main.bounds.width * 0.25)
+                .frame(width: UIScreen.main.bounds.width * 0.25 , height: 60)
                 .padding()
                 .foregroundColor(color)
                 .scaleEffect(isAnimated ? 1.0 : 0.95 )

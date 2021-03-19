@@ -10,19 +10,41 @@ import SwiftUI
 struct BioDataCardIView: View {
     // MARK: - PROPERTIES
     let title : String
-    var breating : String
+    let imageIcon : String
+    var value : String
     var date : Date
     // MARK: - BODY
     var body: some View {
        
         ZStack {
-            HStack (alignment: .top){
-                    
+            VStack {
+                //Date and Time
+                HStack(alignment: .bottom){
+                    Spacer()
+                    Image(systemName: "calendar.circle.fill")
+                        .font(.footnote)
+                    .foregroundColor(.gray)
+                    Text("\(date , formatter: taskDateFormat)")
+                            .font(.footnote)
+                        .foregroundColor(.gray)
+                    Image(systemName: "clock.fill")
+                        .font(.footnote)
+                    .foregroundColor(.gray)
+                    Text("\(date,formatter: dateFormatter)")
+                        .font(.footnote)
+                    .foregroundColor(.gray)
+                }
+              
+                
+                HStack(alignment:.top){
                     ZStack {
-                        Image(systemName: "lungs")
+                        Image(imageIcon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
                             .padding()
-                            .foregroundColor(.accentColor)
-                            .font(.largeTitle)
+                            //.foregroundColor(.accentColor)
+                    
                            
                     }
                     .background(Color("wmm").opacity(0.5))
@@ -30,39 +52,39 @@ struct BioDataCardIView: View {
                     
                     VStack (alignment:.leading){
                         Text(title.uppercased())
+                            .font(.system(size: 15))
                             .font(.headline)
                             .fontWeight(.medium)
                             .foregroundColor(.accentColor)
-                        Text("\(breating) sec.")
+                        Text("\(value) ")
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.accentColor)
                         
                     }.padding(.top)
-                Spacer()
-                    
-                    Text("\(date , formatter: taskDateFormat)")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                        
-                   
-                    
-                }//: VSTACK
-                .padding()
+                    Spacer()
+                  
+                }
+                .padding(.top,-8)
             
+            }// EO - VSTACK
+            .padding()
             .frame(width: UIScreen.main.bounds.width * 0.9)
+        
+            
+         
         }
            
         .background(
                         Color.gray.opacity(0.2)
                             .cornerRadius(25)
                 )
-    }
+    }//View
 }
 // MARK: -PREVIEW
 struct BioDataCardIView_Previews: PreviewProvider {
     static var previews: some View {
-        BioDataCardIView(title: "BREATHING", breating: "5", date:Date())
+        BioDataCardIView(title: "BREATHIN", imageIcon: "highIntensityIntervalTraining", value: "5 somthing", date:Date())
             .preferredColorScheme(.light)
             .previewLayout(.sizeThatFits)
             .padding()

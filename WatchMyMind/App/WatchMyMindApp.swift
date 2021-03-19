@@ -12,26 +12,24 @@ import SwiftUI
 struct WatchMyMindApp: App {
     let presistenContainer = PersistenceController.shared
     @Environment(\.scenePhase) var scenePhase
-    let mv = messageModelView(connectivityProvider: ConnectivityProvider())
+
     var body: some Scene {
         
-        
         WindowGroup {
-           
-            TestView(messageMV: mv)
-           // HomeView()
-               // .environment(\.managedObjectContext, presistenContainer.container.viewContext)
+            HomeView()
+                .environment(\.managedObjectContext, presistenContainer.container.viewContext)
+            //TestView()
                 
         }
 
-    /*    .onChange(of: scenePhase) { (phase) in
+        .onChange(of: scenePhase) { (phase) in
                    switch phase {
                    case .active: print("ScenePhase: active")
                    case .background: print("ScenePhase: background")
                    case .inactive: print("ScenePhase: inactive")
                    @unknown default: print("ScenePhase: unexpected state")
                    }
-        }*/
+        }
     }
 }
         

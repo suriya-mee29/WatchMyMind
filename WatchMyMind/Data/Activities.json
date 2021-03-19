@@ -8,10 +8,10 @@
 },
 {
     "id" : "2",
-    "title" : "Swimming",
-    "description" : "Swimming is an individual or team racing sport that requires the use of one's entire body to move through water. The sport takes place in pools or open water (e.g., in a sea or lake).",
+    "title" : "Exercise",
+    "description" : "Exercises, including jogging, swimming, cycling, walking, gardening, and dancing, have been proved to reduce anxiety and depression. These improvements in mood are proposed to be caused by exercise-induced increase in blood circulation to the brain and by an influence on the hypothalamic-pituitary-adrenal(HPA) axis and, thus, on the physiologic reactivity to stress",
     "type": "AUTO",
-    "imageIcon" : "swimming",
-    "progrss": "25"
+    "imageIcon" : "other",
+    "progrss": "85"
 }
 ]

@@ -9,28 +9,31 @@ import SwiftUI
 
 struct HeaderDetailIView: View {
     // MARK: - PROPERTIES
-    let date : String
-    let time : String
-    let location : String
+    let date : Date
+    let startTime : Date
+    let endTime : Date
     // MARK: - BODY
     var body: some View {
         VStack {
-            Text(date)
+            Text(date , formatter: taskDateFormat)
                 .font(.title)
             HStack {
                 HStack{
-                    Image(systemName: "stopwatch.fill")
-                        .font(.caption)
-                    Text(time)
-                        .font(.caption)
+               
+                    HStack {
+                        Image(systemName: "stopwatch.fill")
+                            .font(.caption)
+                        Text(startTime,formatter: dateFormatter)
+                            .font(.caption)
+                        Text("-")
+                            .font(.caption)
+                        Image(systemName: "stopwatch.fill")
+                            .font(.caption)
+                        Text(endTime,formatter: dateFormatter)
+                            .font(.caption)
+                    }
                 }
-                HStack{
-                    Image(systemName: "location.fill")
-                        .font(.caption)
-                        .lineLimit(1)
-                    Text(location)
-                        .font(.caption)
-                }
+                
             }
             
             
@@ -40,7 +43,7 @@ struct HeaderDetailIView: View {
 // MARK: -PREVIEW
 struct HeaderDetailIView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderDetailIView(date: "11 November 2020", time: "08:00 - 08:05", location: "Khlong Luang")
+        HeaderDetailIView(date: Date() , startTime: Date() , endTime: Date())
             .preferredColorScheme(.light)
             .previewLayout(.sizeThatFits)
             .padding()

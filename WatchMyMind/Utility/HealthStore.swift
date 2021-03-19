@@ -11,6 +11,7 @@ class HealthStore {
     var healthStore : HKHealthStore?
     var query : HKStatisticsCollectionQuery?
     var querySampleQuery : HKSampleQuery?
+    var queryStaticQuery : HKStatisticsQuery?
     var summaryQuery : HKActivitySummaryQuery?
     var mindfulObserverQuery : HKObserverQuery?
     
@@ -21,6 +22,8 @@ class HealthStore {
     let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
     let sleepType =  HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
     let activityType = HKObjectType.activitySummaryType()
+    let workoutType = HKSampleType.workoutType()
+    let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
     
     
     init(){
@@ -34,13 +37,179 @@ class HealthStore {
     }
     // MARK: - Authorization
     func requestAuthorization(compleion: @escaping(Bool)-> Void){
-       
-        
         guard let healthStore = self.healthStore else { return compleion(false)}
-        
-        healthStore.requestAuthorization(toShare: [], read: [mindfulType,standType,stepType,sleepType,activityType]) { (success, error) in
+        healthStore.requestAuthorization(toShare: [], read: [mindfulType,standType,stepType,sleepType,activityType,workoutType,heartRateType]) { (success, error) in
             compleion(success)
         }
+    }
+    // MARK: - Heart Rate
+    func getHeartRateBetween2(startDate: Date , endDate : Date , completion: @escaping ([HKSample]?) -> Void){
+    let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+    let sortDescriptors = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+    let heartRateUnit:HKUnit = HKUnit(from: "count/min")
+        querySampleQuery = HKSampleQuery(sampleType: heartRateType, predicate: predicate , limit: 30, sortDescriptors: [sortDescriptors], resultsHandler: { (query, samples, error) in
+            guard let samples = samples else {
+                completion([])
+                print("Error : \(error?.localizedDescription ?? "error")");
+                return }
+            
+            completion(samples)
+        }) // end of quary
+        
+        
+        
+        
+        if let healthStore = self.healthStore , let querySampleQuery = self.querySampleQuery {
+            healthStore.execute(querySampleQuery)
+        }// end of ex.
+    }
+    
+    func getAVGHeartRate(startDate : Date , endDate : Date , completion: @escaping (HKStatistics?) -> Void){
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictEndDate)
+        self.queryStaticQuery = HKStatisticsQuery(quantityType: heartRateType, quantitySamplePredicate: predicate, options: .discreteAverage, completionHandler: { (query, statistic, error) in
+            
+            guard statistic != nil  else {
+                return
+            }
+            completion(statistic)
+    
+           /* if let quantity = statistic?.averageQuantity(){
+                let beats: Double? = quantity.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute()))
+                print("got: \(String(format: "%.f", beats!))")
+            }*/
+         
+        })
+        if let healthStore = self.healthStore , let queryStaticQuery = self.queryStaticQuery {
+            healthStore.execute(queryStaticQuery)
+        }
+        
+    }
+    
+    func getHeartRateBetween(sample : HKSample? , isActivity : Bool , completion: @escaping ([Double]?) -> Void){
+        let predicate = HKQuery.predicateForSamples(withStart: sample!.startDate as Date, end: sample!.endDate as Date?, options: [])
+    let sortDescriptors = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let heartRateUnit:HKUnit = HKUnit(from: "count/min")
+        querySampleQuery = HKSampleQuery(sampleType: heartRateType, predicate: predicate , limit: 30, sortDescriptors: [sortDescriptors], resultsHandler: { (query, samples, error) in
+
+            guard let samples = samples else {
+              //  compleion([])
+                print("Error : \(error?.localizedDescription ?? "error")");
+                return }
+            
+            if isActivity {
+                guard let mySample = sample as? HKWorkout else {
+                    print("error")
+                    return
+                }
+              print("\(mySample.startDate)\n\(mySample.workoutActivityType.name) \(String(describing: mySample.workoutActivityType.associatedEmoji))\n\(String(describing: mySample.totalEnergyBurned))")
+              print("Start date : \(mySample.startDate)")
+              print("End date: \(mySample.endDate)\n\n")
+              
+                //mySample.
+                
+                
+                for (_, sample) in samples.enumerated() {
+                    
+                         guard let currData:HKQuantitySample = sample as? HKQuantitySample else { return }
+                    
+                    
+                    
+                         print("[\(sample)]")
+                         print("Heart Rate: \(currData.quantity.doubleValue(for: heartRateUnit))")
+                         print("quantityType: \(currData.quantityType)")
+                         print("Start Date: \(currData.startDate)")
+                         print("End Date: \(currData.endDate)")
+                         print("Metadata: \(currData.metadata)")
+                         print("UUID: \(currData.uuid)")
+                         print("Source: \(currData.sourceRevision)")
+                         print("Device: \(currData.device)")
+                         print("---------------------------------\n")
+                
+                    
+            }
+                
+                
+            //compleion(samples)
+           /* for (_, sample) in samples.enumerated() {
+                    guard let currData:HKQuantitySample = sample as? HKQuantitySample else { return }
+
+                    print("[\(sample)]")
+                    print("Heart Rate: \(currData.quantity.doubleValue(for: heartRateUnit))")
+                    print("quantityType: \(currData.quantityType)")
+                print("Start Date: \(currData.startDate)")
+                    print("End Date: \(currData.endDate)")
+                    print("Metadata: \(currData.metadata)")
+                    print("UUID: \(currData.uuid)")
+                    print("Source: \(currData.sourceRevision)")
+                    print("Device: \(currData.device)")
+                    print("---------------------------------\n")
+                }//eofl
+ */
+            }
+        })
+        if let healthStore = self.healthStore , let querySampleQuery = self.querySampleQuery {
+            healthStore.execute(querySampleQuery)
+        }
+        
+    }
+    
+    
+    
+    // MARK: - Workout
+    func calculateWorkout2(startDate: Date , numberOfObserved: Int ,completion: @escaping ([HKWorkout]?) -> Void){
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let endDate = Calendar.current.date(byAdding: .day , value: numberOfObserved , to: startDate)
+        let predicate = HKQuery.predicateForSamples(withStart: endDate, end: startDate, options: .strictStartDate)
+
+        querySampleQuery = HKSampleQuery(sampleType: workoutType, predicate: predicate, limit: 0, sortDescriptors: [sortDescriptor ], resultsHandler: { (query, samples, error) in
+            
+            guard let mySamples = samples as? [HKWorkout] else{
+                print("Error: \(String(describing: error?.localizedDescription))")
+                completion([])
+                return }
+            completion(mySamples)
+          /*  for sample in samples{
+                print("\(sample.startDate)\n\(sample.workoutActivityType.name) \(String(describing: sample.workoutActivityType.associatedEmoji))\n\(String(describing: sample.totalEnergyBurned))")
+                let time = sample.endDate.timeIntervalSince(sample.startDate).stringFromTimeInterval()
+                print("\(time)\n\n")
+            }*/
+        })
+        if let healthStore = self.healthStore , let querySampleQuery = self.querySampleQuery {
+           healthStore.execute(querySampleQuery)
+          }
+        
+    }
+    func calculateWorkout(completion: @escaping ([HKWorkout]?, Error?) -> Void){
+        //1. Get all workouts with the "Other" activity type.
+         let workoutPredicate = HKQuery.predicateForWorkouts(with: .other)
+         
+         //2. Get all workouts that only came from this app.
+         let sourcePredicate = HKQuery.predicateForObjects(from: .default())
+         
+         //3. Combine the predicates into a single predicate.
+         let compound = NSCompoundPredicate(andPredicateWithSubpredicates:
+           [workoutPredicate, sourcePredicate])
+         
+         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: true)
+        
+        querySampleQuery = HKSampleQuery(sampleType: workoutType, predicate: compound, limit: 0, sortDescriptors: [sortDescriptor], resultsHandler: { (query, samples, error) in
+            DispatchQueue.main.async {
+                  guard
+                    let samples = samples as? [HKWorkout],
+                    error == nil
+                    else {
+                      completion(nil, error)
+                      return
+                  }
+                  
+                  completion(samples, nil)
+                }
+        })
+        
+      if let healthStore = self.healthStore , let querySampleQuery = self.querySampleQuery {
+         healthStore.execute(querySampleQuery)
+        }
+        
     }
     // MARK: - Calculate Sleeping
     
@@ -229,7 +398,6 @@ class HealthStore {
                     
                     
                     if let results = results {
-                        print("\(results.count)")
                         var totalTime = TimeInterval()
                         for result in results {
                             totalTime += result.endDate.timeIntervalSince(result.startDate)
