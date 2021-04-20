@@ -6,17 +6,12 @@
 //
 
 import SwiftUI
-import CombineSchedulers
+
 
 
 struct TestView: View {
-    private var healthStore : HealthStore?
-    @ObservedObject var autoActivityStore : AutoActivityStore
-    @State private var data : String = "0"
-    init() {
-        healthStore = HealthStore()
-        autoActivityStore = AutoActivityStore(autoActivityCollection: [])
-    }
+   @ObservedObject var user = User()
+    
     func test(){
         
         
@@ -25,19 +20,38 @@ struct TestView: View {
     
     var body: some View {
         VStack {
-            Text(data)
-            Button(action: {
-                self.autoActivityStore.displayData()
-            }, label: {
-                /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
-            })
+          Text("test")
                
         }
         .onAppear(perform: {
-            autoActivityStore.loadData(startDate: Date(), numberOfObserved: -7)
-            autoActivityStore.displayData()
+            // 1 have user in firebase Authen
            
-    }) // onApprar
+            //1.2 username wrong
+            //1.3 password wrong
+            //1.4 password and username wrong
+            
+            // 2 havn't user in firebase Authen
+            //2.2 username wrong
+ 
+            //2.3 password wrong
+            user.singIn(username: "6009650026", password: "0925954640") { (user,msg) in
+                
+                if user != nil {
+                    DispatchQueue.main.async {
+                        self.user.displayData()
+                        if let currentUser = self.user.currentUser {
+                           // UserDefaults.standard.set( currentUser, forKey: "current")
+                        }
+                        
+                    }
+                   
+                }
+                
+            }
+            //2.4 password and username wrong
+            
+           
+    }) //EO-onApprar
        
         
         

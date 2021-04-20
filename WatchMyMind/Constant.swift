@@ -20,7 +20,7 @@ let manualActivity = [["name": "music relaxation","progrss": "50"],
                       ["name": "hobbies","progrss": "20"],
                       ["name": "scaring videos","progrss": "10"]]
 
-let ac : [Activity] = Bundle.main.decode("Activities.json")
+let ac : [Activity] = Bundle.main.decode("Activities.json") 
 let ac2 : [Activity] = Bundle.main.decode("Activities2.json")
 
 
@@ -34,11 +34,33 @@ let taskDateFormat: DateFormatter = {
        formatter.dateStyle = .long
        return formatter
    }()
+
 let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.timeZone = TimeZone(secondsFromGMT: 7)
     formatter.dateFormat = "HH:mm"
     return formatter
+}()
+
+let statusCurrentUser : Bool = {
+    let userDefults = UserDefaults.standard
+        do {
+            let userData = try userDefults.getObject(forKey: "userData", castTo: UserModel.self)
+            return userData.status
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+}()
+let usernameCurrentUser : String = {
+    let userDefults = UserDefaults.standard
+        do {
+            let userData = try userDefults.getObject(forKey: "userData", castTo: UserModel.self)
+            return userData.data.userName
+        } catch {
+            print(error.localizedDescription)
+            return "-1"
+        }
 }()
 
 

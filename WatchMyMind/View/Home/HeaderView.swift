@@ -17,11 +17,19 @@ struct HeaderView: View {
     @State private var inBad : String = "No data"
     @State private var standing : String = "1.0"
     @State private var steping : Int = 100
-    // MARK: - <#BODY#>
+    @State private var name : String = ""
+    
+    @Binding var user : User
+    @Binding var dt : UserModel?
+    func update1122(  str : String){
+       
+    }
+
+    // MARK: - BODY
     var body: some View {
         ZStack {
             VStack (alignment: .leading){
-                Text("WatchMyMind".uppercased())
+                Text("watch my mind".uppercased())
                     .font(.title3)
                     .fontWeight(.black)
                     .foregroundColor(.white)
@@ -40,13 +48,17 @@ struct HeaderView: View {
                     .padding(.horizontal, UIScreen.main.bounds.width * 0.28)
 
                 
-                    Text("Suriya   Meekhunthod")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .lineLimit(2)
-                        .padding()
-                        .foregroundColor(.white)
+                    Text(dt?.data.displayname_en ?? name)
+                                .font(.system(size: 20))
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .lineLimit(2)
+                                .padding()
+                                .foregroundColor(.white)
                         .frame(width: UIScreen.main.bounds.width)
+                
+                  
+               
              
                     
                 VStack (alignment: .leading ){
@@ -109,12 +121,33 @@ struct HeaderView: View {
                     
                 }
                 .padding(.bottom,30)
-                .padding(.horizontal
-                )
+                .padding(.horizontal)
+               
             }// VSTACK
             .background(Color("wmm"))
             .clipShape(CustomShape())
+            
+           
             .onAppear(perform: {
+                let userDefults = UserDefaults.standard
+                do {
+                    
+                    let userData = try userDefults.getObject(forKey: "userData", castTo: UserModel.self)
+                    
+                    if userData != nil{
+                        
+                        self.name = userData.data.displayname_en
+                        
+                    }
+
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+                
+                
+                
+                
                 if let healthStore = healthStore {
                     healthStore.requestAuthorization { success in
                         //Activity burned
@@ -172,6 +205,7 @@ struct HeaderView: View {
                         //Standing
                         healthStore.getDailyStanding { standTime in
                             self.standing = standTime.stringFromTimeInterval()
+                            
                         }
                         //Steping
                         let startDate  = Calendar.current.date(byAdding: .day,value: -1, to: Date())!
@@ -199,7 +233,7 @@ struct HeaderView: View {
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView()
+        HeaderView( user: .constant(User()), dt: .constant(UserModel(timestamp: 2, status: true, message: "ok", data: DataUserModel(type: "std", statusid: "12", statusname: "ok", userName: "name", prefixname: "Mr.", displayname_th: "th", displayname_en: "en", email: "mail", department: "str", faculty: "str"))))
             .previewLayout(.sizeThatFits)
             .padding()
     }

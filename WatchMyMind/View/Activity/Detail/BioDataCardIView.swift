@@ -74,11 +74,7 @@ struct BioDataCardIView: View {
             
          
         }
-           
-        .background(
-                        Color.gray.opacity(0.2)
-                            .cornerRadius(25)
-                )
+        .background(Color.gray.opacity(0.2).cornerRadius(25))
     }//View
 }
 // MARK: -PREVIEW

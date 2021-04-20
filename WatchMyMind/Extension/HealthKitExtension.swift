@@ -9,7 +9,6 @@ import Foundation
 import HealthKit
 
 extension HKWorkoutActivityType {
-    
     /*
      Simple mapping of available workout types to a human readable name.
      */

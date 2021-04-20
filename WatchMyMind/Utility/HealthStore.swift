@@ -46,7 +46,7 @@ class HealthStore {
     func getHeartRateBetween2(startDate: Date , endDate : Date , completion: @escaping ([HKSample]?) -> Void){
     let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
     let sortDescriptors = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-    let heartRateUnit:HKUnit = HKUnit(from: "count/min")
+    
         querySampleQuery = HKSampleQuery(sampleType: heartRateType, predicate: predicate , limit: 30, sortDescriptors: [sortDescriptors], resultsHandler: { (query, samples, error) in
             guard let samples = samples else {
                 completion([])
@@ -119,10 +119,10 @@ class HealthStore {
                          print("quantityType: \(currData.quantityType)")
                          print("Start Date: \(currData.startDate)")
                          print("End Date: \(currData.endDate)")
-                         print("Metadata: \(currData.metadata)")
+                    print("Metadata: \(String(describing: currData.metadata))")
                          print("UUID: \(currData.uuid)")
                          print("Source: \(currData.sourceRevision)")
-                         print("Device: \(currData.device)")
+                    print("Device: \(String(describing: currData.device))")
                          print("---------------------------------\n")
                 
                     

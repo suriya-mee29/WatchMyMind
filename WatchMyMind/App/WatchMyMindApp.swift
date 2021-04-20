@@ -6,19 +6,31 @@
 //
 
 import SwiftUI
+import Firebase
 
 
 @main
 struct WatchMyMindApp: App {
     let presistenContainer = PersistenceController.shared
     @Environment(\.scenePhase) var scenePhase
-
+   
+    init() {
+        FirebaseApp.configure()
+        
+       
+    }
     var body: some Scene {
         
         WindowGroup {
-            HomeView()
-                .environment(\.managedObjectContext, presistenContainer.container.viewContext)
-            //TestView()
+            //HomeView()
+               // .environment(\.managedObjectContext, presistenContainer.container.viewContext)
+             
+                ContentView()
+                    .environment(\.managedObjectContext, presistenContainer.container.viewContext)
+            
+         //   WatingView()
+                
+        //    TestView()
                 
         }
 

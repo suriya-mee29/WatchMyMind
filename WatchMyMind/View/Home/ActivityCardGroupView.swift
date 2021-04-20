@@ -35,19 +35,19 @@ struct ActivityCardGroupView: View {
                 ScrollView(.horizontal, showsIndicators: false, content: {
      
                     LazyHGrid(rows: [GridItem(.fixed(215))], alignment: .center, spacing: 0, pinnedViews: [], content: {
-                        ForEach(activitys ) { item in
+                        ForEach(activitys) { activity in
                             //CADR
                             NavigationLink(
                                 destination:
-                                    
-                                    DescriptionView(activity: item, navigationTag: .TO_BIODATA_VIEW)
+                                
+                                    DescriptionView(activity: activity, navigationTag: .TO_BIODATA_VIEW)
                                     .environment(\.managedObjectContext, viewContext)
                                 ,
                                 label: {
                                     ActivityCardView(
-                                        activity: item ,
-                                        progressColor: (type != activityType.MANUAL) ? Color("pk2") : Color("yn1"),
-                                        backgroundColor: (type != activityType.MANUAL) ? Color("gr2") : Color("pk2"))
+                                        activity: activity ,
+                                        progressColor: (type != activityType.MANUAL) ? Color("wmm") : Color("blue1"),
+                                        backgroundColor: (type != activityType.MANUAL) ? Color.white : Color.white )
                                         
                                 })
                             
