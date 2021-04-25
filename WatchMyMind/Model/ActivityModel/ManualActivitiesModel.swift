@@ -6,24 +6,43 @@
 //
 
 import Foundation
-struct ManualActivitiesModel : Codable {
+struct ManualActivitiesModel : Codable , Identifiable{
+    let id : UUID
     let createdby : String
     let description : String
     let imageIcon : String
     let title : String
     let type : String
+    var progress : Int
     // optional
     let link : String
-    let picture : Data
+    let photoURL : String
     
-    init( createdby : String , description : String ,imageIcon : String , title : String ,type : String ,link : String = "" , picture : Data = Data()){
+    //indicator
+    let indicator : [String]
+    
+    //fequency
+    let everyDay : Bool
+    let time : Int
+    let round : Int
+    let NoOfDate : Int
+    
+    init( id: UUID = UUID() , createdby : String , description : String ,imageIcon : String , title : String ,type : String ,link : String = "" , photoURL : String = "" ,indicator : [String] = [] , progress : Int = 0, everyDay : Bool , time : Int , round : Int , NoOfDate : Int = -1 ) {
+        self.id = id
         self.createdby = createdby
         self.description = description
         self.imageIcon = imageIcon
         self.title = title
         self.type = type
         self.link = link
-        self.picture = picture
+        self.photoURL = photoURL
+        self.indicator = indicator
+        self.progress = progress
+        
+        self.everyDay = everyDay
+        self.time = time
+        self.round = round
+        self.NoOfDate = NoOfDate
     }
     
 }

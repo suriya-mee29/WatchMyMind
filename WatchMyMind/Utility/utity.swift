@@ -14,3 +14,8 @@ enum USER_STATUS : String ,CodingKey{
     case DISCONTINUE = "discontinue"
     
 }
+enum INDICATOR : String {
+    case SCALING = "scaling"
+    case NOTING = "noting"
+    case HEART_RATE = "heart rate"
+}

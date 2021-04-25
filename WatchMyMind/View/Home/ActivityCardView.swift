@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ActivityCardView: View {
     // MARK: - PROPERTIES
-    let activity : Activity
+    var activity : AutoActivitiesModel =  AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0)
+    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0)
+    let type : String
     let progressColor : Color
     let backgroundColor : Color
     
@@ -17,7 +19,9 @@ struct ActivityCardView: View {
     // MARK: - BODY
     var body: some View {
         VStack {
-            Text(activity.title.uppercased())
+            Text((type == activityType.AUTO.rawValue ? activity.title.uppercased() :
+                    manualActivity.title.uppercased())
+            )
                 .font(.caption)
                 .fontWeight(.bold)
                 .lineLimit(2)
@@ -25,13 +29,14 @@ struct ActivityCardView: View {
                 .foregroundColor(Color.black)
                 .padding(.bottom)
             
-            Image(activity.imageIcon)
+            Image((type == activityType.AUTO.rawValue ? activity.imageIcon :
+                    manualActivity.imageIcon))
                 .resizable()
                 .scaledToFit()
                 .frame(width: 80, height: 80)
                 .scaleEffect(isAnnimating ? 1.0 : 0.6)
            
-            Text("Goals \(activity.progrss)/100")
+            Text("Goals \( (type == activityType.AUTO.rawValue ? activity.progress : manualActivity.progress) )/100")
                 .foregroundColor(Color("stand"))
                   .font(.footnote)
                   .fontWeight(.bold)
@@ -61,9 +66,7 @@ struct ActivityCardView: View {
      // MARK: -PREVIEW
 struct ActivityCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ActivityCardView(activity:ac[0],
-        progressColor: Color("pk2"),
-        backgroundColor: Color("gr2"))
+        ActivityCardView(activity : AutoActivitiesModel(createdby: "de", description: "ssssss", imageIcon: "play2", title: "wwwwww", type: activityType.AUTO.rawValue, progress: 21 , everyDay: true, time: 0, round: 0, NoOfDate: 0), type: "AUTO", progressColor: Color.green, backgroundColor: Color.white)
             .previewLayout(.sizeThatFits)
             .padding()
     }

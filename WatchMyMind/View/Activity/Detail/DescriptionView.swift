@@ -10,13 +10,19 @@ import SwiftUI
 struct DescriptionView: View {
     // MARK: - PROPERTIES
     @State private var isAnnimatingImage : Bool = false
-    let activity : Activity
+    var activity : AutoActivitiesModel =   AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0)
+    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0)
+    let type : activityType
     let navigationTag : NavigationTag
     
     @Environment(\.managedObjectContext) private var viewContext
     @State  var action: Int? = 0
     @State var isDate : Bool = false
-    // MARK: - FUNCTION
+    
+    
+    // ROUTER
+    @State var router : [String] = []
+    
     
     
     
@@ -29,7 +35,7 @@ struct DescriptionView: View {
                         .padding(.bottom)
                         .padding(.top ,
                                  UIApplication.shared.windows.first?.safeAreaInsets.top)
-                    Image(activity.imageIcon)
+                    Image( type == activityType.AUTO ?  activity.imageIcon: manualActivity.imageIcon)
                         .resizable()
                         .scaledToFit()
                         .foregroundColor(Color("wmm"))
@@ -46,23 +52,84 @@ struct DescriptionView: View {
                         })
                        
                     ScrollView(.vertical, showsIndicators: false, content: {
-                        Text(activity.title.uppercased())
+                        Text(type == activityType.AUTO ? activity.title.uppercased() : manualActivity.title.uppercased())
                             .font(.title2)
                             .fontWeight(.medium)
                             .foregroundColor(Color("wmm"))
                        
                             
-                        Text(activity.description)
+                        Text(type == activityType.AUTO ? activity.description : manualActivity.description)
                                 .font(.body)
                                 .padding(.horizontal , UIScreen.main.bounds.width * 0.1)
                                 .foregroundColor(.gray)
                                 .padding(.top,5)
                         
-                           Text("30 Min/Day")
-                            .font(.system(size: 16))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color("stand"))
-                            .padding(.top,5)
+                        
+                        
+                        VStack (alignment: .center){
+                            Text(type == activityType.AUTO ? (activity.everyDay ? "Every day": "Someday, at least \(activity.NoOfDate) days" )
+                                    
+                                    
+                                    :(manualActivity.everyDay ? "Every day": "Someday,at least \(manualActivity.NoOfDate) days" ))
+                                .font(.system(size: 16))
+                                .fontWeight(.bold)
+                                .foregroundColor(Color("stand"))
+                                .padding(.top,5)
+
+                            VStack(alignment:.leading){
+                                if type == activityType.AUTO{
+                                    if activity.time > 0 {
+                                        HStack {
+                                            Image(systemName: "clock")
+                                                .foregroundColor(Color("stand"))
+                                            Text("\(activity.time) Mins/Day")
+                                                .font(.system(size: 16))
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color("stand"))
+                                                .padding(.top,5)
+                                        }
+                                    }
+                                    if activity.round > 0{
+                                        HStack {
+                                            Image(systemName: "arrow.clockwise")
+                                                .foregroundColor(Color("stand"))
+                                            Text("\(activity.round) Time/Day")
+                                                .font(.system(size: 16))
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color("stand"))
+                                                .padding(.top,5)
+                                        }
+                                    }
+                                    
+                                }else{
+                                    if manualActivity.time > 0 {
+                                        HStack {
+                                            Image(systemName: "clock")
+                                                .foregroundColor(Color("stand"))
+                                            Text("\(manualActivity.time) Mins/Day")
+                                                .font(.system(size: 16))
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color("stand"))
+                                                .padding(.top,5)
+                                        }
+                                    }
+                                    if manualActivity.round > 0{
+                                        HStack {
+                                            Image(systemName: "arrow.clockwise")
+                                                .foregroundColor(Color("stand"))
+                                            Text("\(manualActivity.round) Time/Day")
+                                                .font(.system(size: 16))
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color("stand"))
+                                                .padding(.top,5)
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                            
+                          
+                        }
                     })
                     .padding(.bottom)
                   
@@ -73,7 +140,7 @@ struct DescriptionView: View {
                     NavigationLink(destination: 
                                     BioDataListView(headline: "BREATHING", isActivity: false)
                         .environment(\.managedObjectContext, viewContext)
-                                   , tag: 1, selection: $action){
+                                   , tag: NavigationTag.TO_BIODATA_VIEW.rawValue, selection: $action){
                         EmptyView()
                         
                     }
@@ -85,6 +152,17 @@ struct DescriptionView: View {
                         
                     }
                     
+                    // All populatio of indicator
+                    
+                    NavigationLink(
+                        destination: //AttachedFileView(photoString: "https://firebasestorage.googleapis.com/v0/b/watchmymind-9a4de.appspot.com/o/attachedFiles%2F9565BEE7-C227-4CDD-8A87-1D1E2086959C.jpg?alt=media&token=4f0d8d8f-f36a-4358-8615-aacb372e7581", linkString: "https://www.youtube.com/watch?v=e-ORhEE9VVg&list=RD0EVVKs6DQLo&index=27")
+                        Text("ff")
+                        ,
+                        tag: NavigationTag.OTHER.rawValue,
+                        selection: $action ,
+                        label: {EmptyView()})
+                    
+                    
                     
                     //START BTN
                     Button(action: {
@@ -95,7 +173,38 @@ struct DescriptionView: View {
                             }else{
                                 // not do something
                             }
+                        }else{
+                            // manual activity router
+                            if type == .MANUAL {
+                                
+                                for i in 0...(self.router.count-1){
+                                    if self.router[i] == "attached"{
+                                        // go to attached view
+                                        self.router.remove(at: i)
+                                        break
+                                    }
+                                    if self.router[i] == "scaling" {
+                                        // go to scaling view
+                                        self.router.remove(at: i)
+                                        break
+                                    }
+                                    if self.router[i] == "hr"{
+                                        // go to heard rate and timer view
+                                        self.router.remove(at: i)
+                                        break
+                                    }
+                                    if self.router[i] == "noting" {
+                                        // go to noting  view
+                                        self.router.remove(at: i)
+                                        break
+                                    }
+                                }
+                                
+                                
+                            }
+                            
                         }
+                        
                     }, label: {
                         HStack{
                             Text("start".uppercased())
@@ -115,13 +224,18 @@ struct DescriptionView: View {
                 
             }//: ZSTACK
             .ignoresSafeArea(.all , edges: .top)
+            .onAppear(perform: {
+                self.router = manualActivity.indicator
+                if manualActivity.link != "" || manualActivity.photoURL != ""{
+                    router.append("attached")
+                }
+            })
         }
     }
 // MARK: -PREVIEW
 struct DescriptionView_Previews: PreviewProvider {
     static var previews: some View {
-        DescriptionView(activity: Activity(id: "112", title: "swimming", description: "Faster music can make you feel more alert and concentrate better.", type: "AUTO", imageIcon: "swimming", progrss: "34"), navigationTag: .TO_BIODATA_VIEW)
-            .preferredColorScheme(.light)
+        DescriptionView(activity: AutoActivitiesModel(createdby: "ss", description: "Exercises, including jogging, swimming, cycling, walking, gardening, and dancing, have been proved to reduce anxiety and depression. These improvements in mood are proposed to be caused by exercise-induced increase in blood circulation to the brain and by an influence on the hypothalamic-pituitary-adrenal(HPA) axis and, thus, on the physiologic reactivity to stress", imageIcon: "play2", title: "hello", type: activityType.AUTO.rawValue, progress: 30, everyDay: true, time: 30, round: 2, NoOfDate: 6), type: activityType.AUTO, navigationTag: NavigationTag.TO_BIODATA_VIEW)
             
     }
 }

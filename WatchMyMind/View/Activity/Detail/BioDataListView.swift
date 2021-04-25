@@ -44,6 +44,7 @@ struct BioDataListView: View {
                 guard let date = sample?.startDate else {return}
                 
                 let mif  = MindfulnessModel(id: uuid , date: date, time: Int32(time / 60))
+                
                 arrMindFul.append( mif )
             }
             mindfulnessMV.setMindfulness(newData: arrMindFul)

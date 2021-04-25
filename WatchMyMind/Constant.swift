@@ -67,5 +67,9 @@ let usernameCurrentUser : String = {
 
 enum NavigationTag : Int {
     case TO_BIODATA_VIEW = 1
+    case TO_NOTING_VIEW = 101
+    case TO_HEART_RATE_AND_TIMER_VIEW = 102
+    case TO_SCALING_VIEW = 103
+    case OTHER = 3
 }
 

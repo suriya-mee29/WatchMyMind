@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import HealthKit
 import Firebase
+import BBRefreshableScrollView
 
 struct HomeView: View {
     
@@ -22,6 +22,8 @@ struct HomeView: View {
     @Binding var dt : UserModel?
     
     @State var ststus : String = "inactive"
+    
+    @ObservedObject var activities = ActivitiesListViewModel()
     
     
     
@@ -45,54 +47,70 @@ struct HomeView: View {
                                     .zIndex(1)
                                 
                             }
-                            ScrollView(.vertical, showsIndicators: false, content: {
-                                //AUTO ACTIVITY
-                                if(ac.count > 0){
-                                    Group{
-                                    ActivityCardGroupView(type: .AUTO , activitys: activityVM.activitys)
-                                    .padding(.top)
+                            BBRefreshableScrollView { completion in
+                                activities.getActivitiesList(username:  dt?.data.userName ?? usernameCurrentUser){ (success, err)  in
+                                     
+                                    if success {
+                                   print("success")
+                                        completion()
+                                
+                                    }else{
+                                        print("error: \(err)")
                                     }
                                     
                                 }
-                                //Divider()
-                                //AUTO
-                                if(ac.count > 0){
-                                ActivityCardGroupView(type: .MANUAL , activitys: ac2)
-                                    .padding(.top)
-                                }
-                                Button(action: {
-                                    do {
-                                      try Auth.auth().signOut()
-                                        isAuthen = false
-                                        let userDefults = UserDefaults.standard
-                                        do {
-                                            var userData = try userDefults.getObject(forKey: "userData", castTo: UserModel.self)
-                                            if userData != nil {
-                                                userData.status = false
-                                                try userDefults.setObject(userData, forKey: "userData")
-                                                print("save user data")
-                                            }
-
-                                        } catch {
-                                            print(error.localizedDescription)
+                            } content : {
+                                ScrollView(.vertical, showsIndicators: false, content: {
+                                    //AUTO ACTIVITY
+                                    if(activities.autoActivities!.count > 0){
+                                        Group{
+                                            ActivityCardGroupView(type: .AUTO, autoActivitys: activities.autoActivities!)
+                                        .padding(.top)
                                         }
                                         
-                                    } catch{
-                                        print("\(error.localizedDescription)")
-                                        
                                     }
-                                    
-                                }, label: {
-                                    HStack {
-                                        Text("logout".uppercased())
-                                            .fontWeight(.bold)
-                                        Image(systemName: "chevron.forward.square")
+                                    //Divider()
+                                    //AUTO
+                                    if(activities.manualActivities!.count > 0){
+                                        ActivityCardGroupView(type: .MANUAL , manualActivity: activities.manualActivities!)
+                                        .padding(.top)
+                                    }
+                                    Button(action: {
+                                        do {
+                                          try Auth.auth().signOut()
+                                            isAuthen = false
+                                            let userDefults = UserDefaults.standard
+                                            do {
+                                                var userData = try userDefults.getObject(forKey: "userData", castTo: UserModel.self)
+                                                if userData != nil {
+                                                    userData.status = false
+                                                    try userDefults.setObject(userData, forKey: "userData")
+                                                    print("save user data")
+                                                }
+
+                                            } catch {
+                                                print(error.localizedDescription)
+                                            }
                                             
-                                    }
+                                        } catch{
+                                            print("\(error.localizedDescription)")
+                                            
+                                        }
+                                        
+                                    }, label: {
+                                        HStack {
+                                            Text("logout".uppercased())
+                                                .fontWeight(.bold)
+                                            Image(systemName: "chevron.forward.square")
+                                                
+                                        }
+                                    })
+                                   
+                                    
                                 })
-                               
-                                
-                            })
+
+                            }
+                          
                             
                             
                         }//: VSTACK
@@ -100,7 +118,9 @@ struct HomeView: View {
                     }//: ZSTACK
                
                 .ignoresSafeArea(.all , edges: .top)
+               
             }//: NAVIGITION
+           
             }else{
                 WatingView(status: $ststus, userName: dt?.data.userName ?? usernameCurrentUser)
             }
@@ -112,7 +132,19 @@ struct HomeView: View {
                 print(status)
                 
             }
+            activities.getActivitiesList(username:  dt?.data.userName ?? usernameCurrentUser){ (success, err)  in
+                 
+                if success {
+               print("success")
+            
+                }else{
+                    print("error: \(err)")
+                }
+                
+            }
     })
+        
+        
        
        
 }
