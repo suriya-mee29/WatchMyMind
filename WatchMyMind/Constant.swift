@@ -67,9 +67,32 @@ let usernameCurrentUser : String = {
 
 enum NavigationTag : Int {
     case TO_BIODATA_VIEW = 1
+    case OTHER = 3
+    case TEMPORARY = 4
+    case UPLOADING = 111
+    case TO_LINK_UPLAOD_VIEW = 99
+    case TO_IMAGE_UPLAOD_VIEW = 100
     case TO_NOTING_VIEW = 101
     case TO_HEART_RATE_AND_TIMER_VIEW = 102
     case TO_SCALING_VIEW = 103
-    case OTHER = 3
+    case TO_ATTACHED_VIEW = 104
+    
 }
-
+func getTag(navigationTag : String) -> Int {
+    switch navigationTag {
+    case "attached":
+        return 104
+    case "scaling":
+        return 103
+    case "hr":
+        return 102
+    case "noting" :
+          return 101
+    case "reqPhoto" :
+        return 100
+    case "reqLink":
+        return 99
+    default:
+        return 0
+    }
+}

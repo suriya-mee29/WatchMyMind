@@ -12,23 +12,35 @@ class ActivitiesListViewModel : ObservableObject{
     @Published var autoActivities : [AutoActivitiesModel]?
     @Published var manualActivities : [ManualActivitiesModel]?
     private let store = Firestore.firestore()
+    let username : String
     
      var startDate = Date()
      var endDate = Date()
      var appointmentDate = Date()
     
 
-    init() {
+    init(username : String) {
        autoActivities = []
        manualActivities = []
+       self.username = username
+       self.getActivitiesList(){ (success, err)  in
+            if success {
+           print("success from init")
+        
+            }else{
+            print("error from init : \(err)")
+            }
+            
+            
+        }
     }
     
-    public func getActivitiesList(username: String , completion : @escaping (Bool , String) -> Void){
+    public func getActivitiesList(completion : @escaping (Bool , String) -> Void){
     
             self.autoActivities?.removeAll()
             self.manualActivities?.removeAll()
         
-       store.collection("assignment")
+        store.collection("assignment")
             .whereField("client", isEqualTo: username)
             .whereField("current", isEqualTo: true)
             .getDocuments(){ (querySnapshot, err) in
@@ -132,8 +144,16 @@ class ActivitiesListViewModel : ObservableObject{
                                                                 NoOFDate = (dc.data()["NoOfDate"] as? Int)!
                                                             }
                                                             
-                                                            
-                                                            let manualActivityTemp = ManualActivitiesModel(createdby: createdby, description: description!, imageIcon: imageIcon!, title: title!, type: type!, link: link, photoURL: photoURL, indicator: indicators!, progress: progress!,everyDay: everyDay!, time: time! , round: round! , NoOfDate : NoOFDate)
+                                                            //outcome request
+                                                            var outcomeRequest = [String]()
+                                                            if (activity!["outcomeReq"] as? [String]) != nil{
+                                                                outcomeRequest = (activity!["outcomeReq"] as? [String])!
+                                                                
+                                                            }
+                                                            let path = "assignment/\(AssignmentDocument.documentID)/activityList/\(dc.documentID)/results"
+                                                            print("path --> \(path)")
+        
+                                                            let manualActivityTemp = ManualActivitiesModel(createdby: createdby, description: description!, imageIcon: imageIcon!, title: title!, type: type!, link: link, photoURL: photoURL, indicator: indicators!, progress: progress!,everyDay: everyDay!, time: time! , round: round! , NoOfDate : NoOFDate,outcomeReq: outcomeRequest, activityPath: path)
                                                             
                                                             self.manualActivities?.append(manualActivityTemp)
                                                             

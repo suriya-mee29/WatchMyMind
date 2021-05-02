@@ -21,6 +21,7 @@ struct ActivityCardGroupView: View {
     var manualActivity : [ManualActivitiesModel] = []
     let haptics = UIImpactFeedbackGenerator(style: .medium)
     @Environment(\.managedObjectContext) private var viewContext
+    @State  var isActive : Bool = false
     
     // MARK: - BODY
     var body: some View {
@@ -41,24 +42,17 @@ struct ActivityCardGroupView: View {
                         ForEach( autoActivitys) { activity in
                             //CADR
                             NavigationLink(
-                                destination:
-                                
-                                    DescriptionView(activity: activity , type: type, navigationTag: .TO_BIODATA_VIEW)
-                                    .environment(\.managedObjectContext, viewContext)
-                                ,
+                                destination: DescriptionView(activity: activity , type: type, navigationTag: .TO_BIODATA_VIEW)
+                                    .environment(\.managedObjectContext, viewContext),
+                                isActive: $isActive,
                                 label: {
                                     ActivityCardView(
-                                        activity: activity ,
-                                        type: type.rawValue, progressColor: (type != activityType.MANUAL) ? Color("wmm") : Color("blue1"),
-                                        backgroundColor: (type != activityType.MANUAL) ? Color.white : Color.white )
-                                        
+                                                                            activity: activity ,
+                                                                            type: type.rawValue, progressColor: (type != activityType.MANUAL) ? Color("wmm") : Color("blue1"),
+                                                                            backgroundColor: (type != activityType.MANUAL) ? Color.white : Color.white )
+                                    
                                 })
-                            
-                            
-                        
-                            
-                              
-                          //ActivityCardView()
+                         
                               .padding(.horizontal,13)
                            
                              

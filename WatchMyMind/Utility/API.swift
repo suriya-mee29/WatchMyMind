@@ -8,3 +8,4 @@
 import Foundation
 let stdInfoURL : String = "https://restapi.tu.ac.th/api/v2/profile/std/info/?id="
 let TUStdAuthen : String = "https://restapi.tu.ac.th/api/v1/auth/Ad/verify"
+let APIForThai_SSENSE : String = "https://api.aiforthai.in.th/ssense"

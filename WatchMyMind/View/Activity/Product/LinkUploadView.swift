@@ -8,14 +8,12 @@
 import SwiftUI
 
 struct LinkUploadView: View {
+    @Binding var link : String
+    
     var body: some View {
-        ZStack {
+      
             VStack {
-                NavigationBarViewII(title: "watchmymind", imageIconRight: "")
-                    .padding(.horizontal , 15)
-                    .padding(.bottom)
-                    .padding(.top ,
-                             UIApplication.shared.windows.first?.safeAreaInsets.top)
+                
                 Text("อัพโหลดลิงค์ของหนังที่ดูหรือTrailerของหนัง")
                     .font(.title3)
                     .fontWeight(.bold)
@@ -31,20 +29,20 @@ struct LinkUploadView: View {
                      .padding()
                      .padding(.top, UIScreen.main.bounds.height * 0.02)
                 
-              LinkFieldView()
+                LinkFieldView(link: $link)
                 .padding(.horizontal)
                 .padding(.top)
                 
-                Spacer()
+           
                 
             }
-        }//: ZSTACK
-        .ignoresSafeArea(.all,edges: .all)
+       
+       
     }
 }
 
 struct LinkUploadView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkUploadView()
+        LinkUploadView(link: .constant(""))
     }
 }

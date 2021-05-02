@@ -14,6 +14,8 @@ class Stopwatch: ObservableObject {
 
     /// Is the timer running?
     @Published private(set) var isRunning = false
+    
+    @Published private(set) var tmInterval = TimeInterval()
 
     /// Time that we're counting from
     private var startTime: Date?                        { didSet { saveStartTime() } }
@@ -54,8 +56,8 @@ extension Stopwatch {
                 let now = Date()
                 let elapsed = now.timeIntervalSince(startTime)
 
-               
-
+                
+                self.tmInterval = elapsed
              self.message = elapsed.format(using: [.hour, .minute, .second])!
             }
 

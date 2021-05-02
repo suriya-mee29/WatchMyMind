@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct ManualActivitiesModel : Codable , Identifiable{
+struct ManualActivitiesModel :  Identifiable{
     let id : UUID
     let createdby : String
     let description : String
@@ -27,7 +27,15 @@ struct ManualActivitiesModel : Codable , Identifiable{
     let round : Int
     let NoOfDate : Int
     
-    init( id: UUID = UUID() , createdby : String , description : String ,imageIcon : String , title : String ,type : String ,link : String = "" , photoURL : String = "" ,indicator : [String] = [] , progress : Int = 0, everyDay : Bool , time : Int , round : Int , NoOfDate : Int = -1 ) {
+    //outcome req
+    let outcomeReq :[String]
+    
+    let activityPath : String
+    
+  
+    
+    
+    init( id: UUID = UUID() , createdby : String , description : String ,imageIcon : String , title : String ,type : String ,link : String = "" , photoURL : String = "" ,indicator : [String] = [] , progress : Int = 0, everyDay : Bool , time : Int , round : Int , NoOfDate : Int = -1 , outcomeReq :[String] = [] ,activityPath : String) {
         self.id = id
         self.createdby = createdby
         self.description = description
@@ -43,6 +51,11 @@ struct ManualActivitiesModel : Codable , Identifiable{
         self.time = time
         self.round = round
         self.NoOfDate = NoOfDate
+        
+        self.outcomeReq = outcomeReq
+        self.activityPath = activityPath
+        
     }
+  
     
 }

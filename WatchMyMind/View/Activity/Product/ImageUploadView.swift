@@ -10,19 +10,16 @@ import SwiftUI
 struct ImageUploadView: View {
     // MARK: - PROPERTIES
     @State private var isShowImagePicker : Bool = false
-    @State  var image : UIImage?
+    @Binding  var image : UIImage?
     @State var sourseType : UIImagePickerController.SourceType = UIImagePickerController.SourceType.photoLibrary
     
     @State var isPicked : Bool = false
+
     // MARK: - BODY
     var body: some View {
-        ZStack {
+      
             VStack {
-                NavigationBarViewII(title: "watchmymind", imageIconRight: "")
-                    .padding(.horizontal , 15)
-                    .padding(.bottom)
-                    .padding(.top ,
-                             UIApplication.shared.windows.first?.safeAreaInsets.top)
+              
                 Text("อัพโหลดรูปภาพที่วาด")
                     .font(.title3)
                     .fontWeight(.bold)
@@ -62,32 +59,21 @@ struct ImageUploadView: View {
                     }
                     .background(Color("wmm"))
                     .clipShape(Capsule())
-                    if image != nil{
-                        
-                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                            Text("submit".uppercased())
-                                .fontWeight(.medium)
-                                .foregroundColor(.white)
-                                .padding()
-                        })
-                        .background(Color("wmm"))
-                        .clipShape(Capsule())
-                        
-                    }
+                  
                 }
                 
                
-                Spacer()
+                
                 
             }
-        }//: ZSTACK
-        .ignoresSafeArea(.all,edges: .all)
+      
+       
     }
 }
 // MARK: -PREVIEW
 struct UploadView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageUploadView()
+        ImageUploadView(image: .constant(UIImage()))
             .preferredColorScheme(.light)
     }
 }

@@ -10,6 +10,14 @@ import SwiftUI
 struct AttachedFileView: View {
     let photoString : String
     let linkString : String
+    
+    @State var route : [String] = []
+    let  localRoute : [String]
+    @State  var action: Int? = 0
+    let activity : ManualActivitiesModel
+    @State var results : [String:Any]
+
+    
     var body: some View {
         ZStack {
             VStack (alignment: .leading){
@@ -45,7 +53,7 @@ struct AttachedFileView: View {
                                    HStack {
                                     Spacer()
                                        ProgressView()
-                                       Text(" loading")
+                                    Text(" loading")
                                            .font(.footnote)
                                            .fontWeight(.bold)
                                            .foregroundColor(.secondary)
@@ -56,12 +64,91 @@ struct AttachedFileView: View {
                            }
                        }
                     }
+                    
                 }).padding(.top)
                 .padding(.horizontal)
+                
+                HStack{
+                    Spacer()
+                    Button(action:{
+                        for i in 0...(self.route.count - 1) {
+                            let tag = getTag(navigationTag: self.route[i])
+                            if self.route[i] == "scaling" {
+                                
+                                if action! < tag {
+                                // go to scaling view
+                                self.action = NavigationTag.TO_SCALING_VIEW.rawValue
+                                }
+                                
+                            }
+                            if self.route[i] == "hr"{
+                                if action! < tag {
+                                // go to heard rate and timer view
+                                self.action = NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue
+                                }
+                                
+                            }
+                            if self.route[i] == "noting" {
+                                if action! < tag {
+                                // go to noting  view
+                                self.action = NavigationTag.TO_NOTING_VIEW.rawValue
+                                }
+                            
+                            }
+                        } // loop
+                        print("action tag \(action)")
+                        for i in 0...(self.route.count - 1 ){
+                            if action == getTag(navigationTag: self.route[i]){
+                                self.route.remove(at: i)
+                                print("removed")
+                                break
+                            }
+                        }
+                        print("after remove in attached\(self.route)")
+                        //gggggg
+                        
+                    },label:{
+                        Text("next".uppercased())
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .padding()
+                    })
+                    Spacer()
+                }
+                ScrollView(.vertical, showsIndicators: false, content: {
+                    // All populatio of indicator
+                    //Attached file view
+                    // Scalling view
+                    NavigationLink(
+                        destination: ScalingView(isBefore: true, localRoute: self.route,activity: self.activity, results: self.results),
+                        tag: NavigationTag.TO_SCALING_VIEW.rawValue,
+                        selection: $action,
+                        label: {EmptyView()})
+                    //Heart rate and timer view
+                    NavigationLink(
+                        destination: HeartRateView(localRoute: self.route,activity: self.activity, results: self.results),
+                        tag: NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue,
+                        selection: $action,
+                        label: {EmptyView()})
+                        .isDetailLink(false)
+                    // Nitting view
+                    NavigationLink(
+                        destination: NotingView(results: self.results, activity: self.activity),
+                        tag: NavigationTag.TO_NOTING_VIEW.rawValue,
+                        selection: $action,
+                        label: {EmptyView()})
+                    
+                }).frame(height: 0)
+
                 
             }
            
         }.ignoresSafeArea(.all , edges: .top)
+        .onAppear(perform: {
+            self.action = 0
+            self.route = localRoute
+            print("app-->\(self.route)")
+        })
         
     }
 }
@@ -69,6 +156,6 @@ struct AttachedFileView: View {
 struct AttachedFileView_Previews: PreviewProvider {
     static var previews: some View {
         AttachedFileView(photoString: "https://firebasestorage.googleapis.com/v0/b/watchmymind-9a4de.appspot.com/o/attachedFiles%2F9565BEE7-C227-4CDD-8A87-1D1E2086959C.jpg?alt=media&token=4f0d8d8f-f36a-4358-8615-aacb372e7581"
-            , linkString: "https://www.youtube.com/watch?v=e-ORhEE9VVg&list=RD0EVVKs6DQLo&index=27")
+                         , linkString: "https://www.youtube.com/watch?v=e-ORhEE9VVg&list=RD0EVVKs6DQLo&index=27", localRoute:  [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: ""), results: [String : Any]())
     }
 }

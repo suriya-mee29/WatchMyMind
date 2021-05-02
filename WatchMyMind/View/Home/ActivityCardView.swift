@@ -10,7 +10,7 @@ import SwiftUI
 struct ActivityCardView: View {
     // MARK: - PROPERTIES
     var activity : AutoActivitiesModel =  AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0)
-    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0)
+    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "")
     let type : String
     let progressColor : Color
     let backgroundColor : Color

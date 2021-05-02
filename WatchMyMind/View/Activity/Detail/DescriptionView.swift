@@ -11,9 +11,12 @@ struct DescriptionView: View {
     // MARK: - PROPERTIES
     @State private var isAnnimatingImage : Bool = false
     var activity : AutoActivitiesModel =   AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0)
-    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0)
+    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "")
     let type : activityType
     let navigationTag : NavigationTag
+    @State var results : [String:Any] = [String:Any]()
+
+    
     
     @Environment(\.managedObjectContext) private var viewContext
     @State  var action: Int? = 0
@@ -132,36 +135,50 @@ struct DescriptionView: View {
                         }
                     })
                     .padding(.bottom)
-                  
-                    
-                    
                   Spacer()
-                    
-                    NavigationLink(destination: 
-                                    BioDataListView(headline: "BREATHING", isActivity: false)
-                        .environment(\.managedObjectContext, viewContext)
-                                   , tag: NavigationTag.TO_BIODATA_VIEW.rawValue, selection: $action){
-                        EmptyView()
+                    ScrollView(.vertical, showsIndicators: false, content: {
+                        NavigationLink(destination:
+                                        BioDataListView(headline: "BREATHING", isActivity: false)
+                            .environment(\.managedObjectContext, viewContext)
+                                       , tag: NavigationTag.TO_BIODATA_VIEW.rawValue, selection: $action){
+                            EmptyView()
+                            
+                        }
+                        NavigationLink(destination:
+                                        BioDataListView(headline: "EXERCISE", isActivity: true)
+                            .environment(\.managedObjectContext, viewContext)
+                                       , tag: 2, selection: $action){
+                            EmptyView()
+                            
+                        }
+                        // All populatio of indicator
+                        //Attached file view
+                        NavigationLink(
+                            destination: AttachedFileView(photoString: manualActivity.photoURL, linkString: manualActivity.link, localRoute: self.router, activity: self.manualActivity, results: self.results),
+                            tag: NavigationTag.TO_ATTACHED_VIEW.rawValue,
+                            selection: $action ,
+                            label: {EmptyView()})
+                            .isDetailLink(false)
+                        // Scalling view
+                        NavigationLink(
+                            destination: ScalingView(isBefore: true, localRoute: self.router,activity: self.manualActivity, results: self.results),
+                            tag: NavigationTag.TO_SCALING_VIEW.rawValue,
+                            selection: $action,
+                            label: {EmptyView()})
+                        //Heart rate and timer view
+                        NavigationLink(
+                            destination: HeartRateView(localRoute: self.router, activity: self.manualActivity, results: self.results),
+                            tag: NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue,
+                            selection: $action,
+                            label: {EmptyView()})
+                        // Nitting view
+                        NavigationLink(
+                            destination: NotingView( results: self.results, activity: self.manualActivity),
+                            tag: NavigationTag.TO_NOTING_VIEW.rawValue,
+                            selection: $action,
+                            label: {EmptyView()})
                         
-                    }
-                    NavigationLink(destination:
-                                    BioDataListView(headline: "EXERCISE", isActivity: true)
-                        .environment(\.managedObjectContext, viewContext)
-                                   , tag: 2, selection: $action){
-                        EmptyView()
-                        
-                    }
-                    
-                    // All populatio of indicator
-                    
-                    NavigationLink(
-                        destination: //AttachedFileView(photoString: "https://firebasestorage.googleapis.com/v0/b/watchmymind-9a4de.appspot.com/o/attachedFiles%2F9565BEE7-C227-4CDD-8A87-1D1E2086959C.jpg?alt=media&token=4f0d8d8f-f36a-4358-8615-aacb372e7581", linkString: "https://www.youtube.com/watch?v=e-ORhEE9VVg&list=RD0EVVKs6DQLo&index=27")
-                        Text("ff")
-                        ,
-                        tag: NavigationTag.OTHER.rawValue,
-                        selection: $action ,
-                        label: {EmptyView()})
-                    
+                    }).frame(height: 0)
                     
                     
                     //START BTN
@@ -176,29 +193,66 @@ struct DescriptionView: View {
                         }else{
                             // manual activity router
                             if type == .MANUAL {
-                                
+                                let result : [String:Any] = ["startDate": Data()]
+                                self.results = result
                                 for i in 0...(self.router.count-1){
+                                    let tag = getTag(navigationTag: self.router[i])
                                     if self.router[i] == "attached"{
+                                            
+                                        if action! < tag {
                                         // go to attached view
-                                        self.router.remove(at: i)
-                                        break
+                                        self.action = NavigationTag.TO_ATTACHED_VIEW.rawValue
+                                        }
                                     }
                                     if self.router[i] == "scaling" {
+                                        
+                                        if action! < tag {
                                         // go to scaling view
-                                        self.router.remove(at: i)
-                                        break
+                                        self.action = NavigationTag.TO_SCALING_VIEW.rawValue
+                                        }
+                                        
                                     }
                                     if self.router[i] == "hr"{
+                                        if action! < tag {
                                         // go to heard rate and timer view
-                                        self.router.remove(at: i)
-                                        break
+                                        self.action = NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue
+                                        }
+                                        
                                     }
                                     if self.router[i] == "noting" {
+                                        if action! < tag {
                                         // go to noting  view
+                                        self.action = NavigationTag.TO_NOTING_VIEW.rawValue
+                                        }
+                                    
+                                    }
+                                    if self.router[i] == "reqPhoto"{
+                                        if action! < tag {
+                                        // go to uploading image  view
+                                            self.action = NavigationTag.TO_IMAGE_UPLAOD_VIEW.rawValue
+                                        
+                                        }
+                                    }
+                                    if self.router[i] == "reqLink"{
+                                        if action! < tag {
+                                        // go to uploading link  view
+                                            self.action = NavigationTag.TO_IMAGE_UPLAOD_VIEW.rawValue
+                                        
+                                        }
+                                    }
+                                }
+                                
+                                print("action tag \(action)")
+                                for i in 0...(self.router.count - 1 ){
+                                    if action == getTag(navigationTag: self.router[i]){
                                         self.router.remove(at: i)
+                                        print("removed")
                                         break
                                     }
                                 }
+                                print("after remove \(self.router)")
+                                //gggggg
+                                
                                 
                                 
                             }
@@ -217,17 +271,21 @@ struct DescriptionView: View {
                     })
                     .background(Color("wmm"))
                     .clipShape(Capsule())
-                  //  .shadow(color: Color.gray.opacity(0.5), radius: 2, x: 0, y: 5)
-                    //: Btton
-                }
+                 
+                    //: eof-Btton
+                }//: eof - VStack
                
                 
             }//: ZSTACK
             .ignoresSafeArea(.all , edges: .top)
             .onAppear(perform: {
+                if type == .MANUAL {
                 self.router = manualActivity.indicator
-                if manualActivity.link != "" || manualActivity.photoURL != ""{
-                    router.append("attached")
+                    print("router-->\(self.router)")
+                    if manualActivity.link != "" || manualActivity.photoURL != ""{
+                        self.router.append("attached")
+                    }
+                    print("app \(self.router)")
                 }
             })
         }

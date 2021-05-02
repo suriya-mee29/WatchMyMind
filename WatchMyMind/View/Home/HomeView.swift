@@ -12,25 +12,37 @@ import BBRefreshableScrollView
 struct HomeView: View {
     
     // MARK: - PROPERTIES
-    @ObservedObject var activityVM = ActivityViewModel()
     @State public var showDescriptionView: Bool = false
     @State var isNewTripPresented = false
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode
+    
     @Binding var isAuthen : Bool
     @Binding var user : User
     @Binding var dt : UserModel?
     
+    
     @State var ststus : String = "inactive"
     
-    @ObservedObject var activities = ActivitiesListViewModel()
+    @ObservedObject var activities : ActivitiesListViewModel
     
+    let username : String
     
-    
+ 
     
     //@State var status = UserDefaults.standard.object(forKey: "status") as ?
     var healthStore = HealthStore()
     let hapicImpact = UIImpactFeedbackGenerator(style: .medium)
+    
+    init(isAuthen : Binding<Bool> ,user : Binding<User>, dt : Binding<UserModel?>, username : String){
+        self._isAuthen = isAuthen
+        self._user = user
+        self._dt = dt
+        self.username = username
+        
+        self.activities = ActivitiesListViewModel(username: username)
+        
+    }
     // MARK: - BODY
     var body: some View {
         
@@ -48,7 +60,7 @@ struct HomeView: View {
                                 
                             }
                             BBRefreshableScrollView { completion in
-                                activities.getActivitiesList(username:  dt?.data.userName ?? usernameCurrentUser){ (success, err)  in
+                                activities.getActivitiesList(){ (success, err)  in
                                      
                                     if success {
                                    print("success")
@@ -70,7 +82,7 @@ struct HomeView: View {
                                         
                                     }
                                     //Divider()
-                                    //AUTO
+                                    //MANUAL
                                     if(activities.manualActivities!.count > 0){
                                         ActivityCardGroupView(type: .MANUAL , manualActivity: activities.manualActivities!)
                                         .padding(.top)
@@ -127,21 +139,13 @@ struct HomeView: View {
             
         }
         .onAppear(perform: {
+
             user.getUserSatus(username: dt?.data.userName ?? usernameCurrentUser){ status in
                 self.ststus = status
                 print(status)
                 
             }
-            activities.getActivitiesList(username:  dt?.data.userName ?? usernameCurrentUser){ (success, err)  in
-                 
-                if success {
-               print("success")
             
-                }else{
-                    print("error: \(err)")
-                }
-                
-            }
     })
         
         
@@ -152,7 +156,7 @@ struct HomeView: View {
    // MARK: - PREVIEW
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(isAuthen: .constant(true), user: .constant(User()), dt: .constant(UserModel(timestamp: 2, status: true, message: "ok", data: DataUserModel(type: "std", statusid: "12", statusname: "ok", userName: "name", prefixname: "Mr.", displayname_th: "th", displayname_en: "en", email: "mail", department: "str", faculty: "str"))))
+        HomeView(isAuthen: .constant(true), user: .constant(User()), dt: .constant(UserModel(timestamp: 2, status: true, message: "ok", data: DataUserModel(type: "std", statusid: "12", statusname: "ok", userName: "name", prefixname: "Mr.", displayname_th: "th", displayname_en: "en", email: "mail", department: "str", faculty: "str"))), username: "6009650026")
             .preferredColorScheme(.light)
     }
 }

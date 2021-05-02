@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct LinkFieldView: View {
-    @State private var link : String = ""
-    @State private var isEmpty : Bool = true
+    @Binding  var link : String
+   
 
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center), content: {
@@ -18,28 +18,9 @@ struct LinkFieldView: View {
                 .frame(height:60)
                 .background(Color("backgroung2").opacity(0.2))
                 .clipShape(Capsule())
-                .onChange(of: link, perform: { value in
-                    if value != "" {
-                        isEmpty = false
-                    }else{
-                        isEmpty = true
-                    }
-                })
+               
             
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                Image(systemName: "paperplane.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(Color.white)
-                    .frame(width: 60, height: 60)
-                    .background(Color("wmm").opacity( isEmpty ? 0.5 : 1.0 ))
-                    .clipShape(Capsule())
-            })
-            .disabled( isEmpty ? true : false )
-            /*Image(systemName: "paperplane.fill")
-                .font(.system(size: 24))
-                .foregroundColor(Color.white)
-                .frame(width: 60, height: 60)
-                .background(Color("wmm").cornerRadius(9))*/
+           
                 
         })
     }
@@ -47,7 +28,7 @@ struct LinkFieldView: View {
 
 struct LinkField_Previews: PreviewProvider {
     static var previews: some View {
-        LinkFieldView()
+        LinkFieldView(link: .constant(""))
             .preferredColorScheme(.light)
             .previewLayout(.sizeThatFits)
             .padding()

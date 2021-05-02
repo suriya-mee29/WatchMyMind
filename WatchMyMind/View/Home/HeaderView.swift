@@ -21,6 +21,7 @@ struct HeaderView: View {
     
     @Binding var user : User
     @Binding var dt : UserModel?
+    let locale = Locale.current
     func update1122(  str : String){
        
     }
@@ -47,8 +48,9 @@ struct HeaderView: View {
                     })
                     .padding(.horizontal, UIScreen.main.bounds.width * 0.28)
 
-                
-                    Text(dt?.data.displayname_en ?? name)
+               
+               // dt?.data.displayname_en ?? name
+                Text(locale.languageCode ?? "en" == "th" ? "\(dt?.data.displayname_th ?? name)" : "\(dt?.data.displayname_en ?? name)")
                                 .font(.system(size: 20))
                                 .font(.title)
                                 .fontWeight(.bold)
@@ -129,6 +131,8 @@ struct HeaderView: View {
             
            
             .onAppear(perform: {
+                
+                print("local--> \(locale.languageCode?.description)")
                 let userDefults = UserDefaults.standard
                 do {
                     
@@ -136,7 +140,12 @@ struct HeaderView: View {
                     
                     if userData != nil{
                         
+                        let strLocale = locale.languageCode ?? "en"
+                        if strLocale == "th" {
+                        self.name = userData.data.displayname_th
+                        }else {
                         self.name = userData.data.displayname_en
+                        }
                         
                     }
 
@@ -172,7 +181,6 @@ struct HeaderView: View {
                                         }else{
                                             //asleep
                                             asleep_ += categorySample.endDate.timeIntervalSince(categorySample.startDate)
-                                            
                                         }
                                     }else{
                                         asleep_ = 0

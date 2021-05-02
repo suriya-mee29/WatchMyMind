@@ -14,13 +14,16 @@ struct ContentView: View {
     @State private var username : String = ""
     @State private var password : String = ""
     @State var dt : UserModel?
+    @ObservedObject var activities : ActivitiesListViewModel
+    
+    let ar : [AutoActivitiesModel] = [AutoActivitiesModel(createdby: "ww", description: "sss", imageIcon: "play2", title: "test", type: "AUTO", progress: 21, everyDay: true, time: 30, round: 2, NoOfDate: 7),AutoActivitiesModel(createdby: "w222w", description: "s222ss", imageIcon: "play2", title: "test2", type: "AUTO", progress: 21, everyDay: true, time: 30, round: 2, NoOfDate: 7)]
     
     
     @State var user = User()
     @Environment(\.managedObjectContext) private var viewContext
    
     init() {
-        print("status--> \(isAuthen)")
+        self.activities = ActivitiesListViewModel(username: "6009650026")
         
     }
     func getstatus()-> Bool{
@@ -33,7 +36,7 @@ struct ContentView: View {
         ZStack{
             
             if isAuthen {
-                HomeView( isAuthen: $isAuthen, user: $user, dt: $dt ).environment(\.managedObjectContext, viewContext)
+                HomeView(isAuthen: $isAuthen, user: $user, dt: $dt, username: dt?.data.userName ?? usernameCurrentUser ).environment(\.managedObjectContext, viewContext)
                 
             }else{
                 
@@ -42,8 +45,7 @@ struct ContentView: View {
             }
             
         }.onAppear{
-         
-           
+            
         }
             
     }

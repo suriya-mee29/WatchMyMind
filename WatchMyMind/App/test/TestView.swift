@@ -8,10 +8,22 @@
 import SwiftUI
 
 
+struct detailView : View {
+    
+    let pet : String
+    var body: some View{
+        VStack{
+            
+            Text("\(pet)")
+                .font(.title)
+                .fontWeight(.heavy)
+        }
+    }
+}
 
 struct TestView: View {
-   @ObservedObject var user = User()
-    
+    @ObservedObject var textRecognition = TextRecognition()
+    let element = ["dog", "cat", "fish","hamster"]
     func test(){
         
         
@@ -19,39 +31,36 @@ struct TestView: View {
     }
     
     var body: some View {
-        VStack {
-          Text("test")
-               
-        }
-        .onAppear(perform: {
-            // 1 have user in firebase Authen
-           
-            //1.2 username wrong
-            //1.3 password wrong
-            //1.4 password and username wrong
-            
-            // 2 havn't user in firebase Authen
-            //2.2 username wrong
- 
-            //2.3 password wrong
-            user.singIn(username: "6009650026", password: "0925954640") { (user,msg) in
-                
-                if user != nil {
-                    DispatchQueue.main.async {
-                        self.user.displayData()
-                        if let currentUser = self.user.currentUser {
-                           // UserDefaults.standard.set( currentUser, forKey: "current")
-                        }
+        NavigationView {
+            VStack {
+              Text("test")
+                ForEach(element , id: \.self){  pet in
+                   NavigationLink(
+                    destination: detailView(pet: pet),
+                    label: {
+                        Text("\(pet)")
+                            .padding(.vertical)
+                    })
                         
-                    }
-                   
                 }
-                
+                   
             }
-            //2.4 password and username wrong
+            .onAppear(perform: {
+                
+               // self.textRecognition.SSense(text: "ฉันน่าจะอยู่ที่ตรงนั้นข้างๆเธอได้เดินร่วมทางกันเหมือนเดิม แต่ก็รู้ว่าเสียใจเมื่อมันสายเกินไม่มีแล้วที่เคยรักกัน")
+               
+                
+                self.textRecognition.SSense(text: "ฉันน่าจะอยู่ที่ตรงนั้น ข้างๆเธอได้เดินรวมทางกันเหมือนเดิมแต่ก็รู้ ว่าเสียใจเมื่อมันสายเกินไม่มีแล้วที่เคยรักกัน﻿"){ ssense in
+                    if ssense != nil {
+                        print("scroe\(ssense?.sentiment.score)")
+                        print("\((ssense?.sentiment.polarity_neg)! ? "negative" : "positive" )")
+                    }
+                    
+                }
             
-           
-    }) //EO-onApprar
+              
+        })
+        } //EO-onApprar
        
         
         
