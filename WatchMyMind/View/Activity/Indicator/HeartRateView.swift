@@ -133,7 +133,7 @@ struct HeartRateView: View {
                                         }else{
                                             //end
                                              action = 0
-                                            
+                                            NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
                                             
 
                                         }

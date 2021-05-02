@@ -98,7 +98,10 @@ struct UploadingView: View {
                     
                     HStack{
                         Button(action: {
-                            // to ending
+                            //storg data to DB
+                            //ending
+                                NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+                            //eof - ending
                             
                         }, label: {
                             Text("submit".uppercased())

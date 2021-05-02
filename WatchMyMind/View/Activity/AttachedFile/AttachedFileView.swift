@@ -71,48 +71,55 @@ struct AttachedFileView: View {
                 HStack{
                     Spacer()
                     Button(action:{
+                        var ac = 0
                         for i in 0...(self.route.count - 1) {
                             let tag = getTag(navigationTag: self.route[i])
                             if self.route[i] == "scaling" {
                                 
-                                if action! < tag {
+                                if ac < tag {
                                 // go to scaling view
-                                self.action = NavigationTag.TO_SCALING_VIEW.rawValue
+                                ac = NavigationTag.TO_SCALING_VIEW.rawValue
                                 }
                                 
                             }
                             if self.route[i] == "hr"{
-                                if action! < tag {
+                                if ac < tag {
                                 // go to heard rate and timer view
-                                self.action = NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue
+                                ac = NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue
                                 }
                                 
                             }
                             if self.route[i] == "noting" {
-                                if action! < tag {
+                                if ac < tag {
                                 // go to noting  view
-                                self.action = NavigationTag.TO_NOTING_VIEW.rawValue
+                                ac = NavigationTag.TO_NOTING_VIEW.rawValue
                                 }
                             
                             }
                         } // loop
                         print("action tag \(action)")
                         for i in 0...(self.route.count - 1 ){
-                            if action == getTag(navigationTag: self.route[i]){
+                            if ac == getTag(navigationTag: self.route[i]){
                                 self.route.remove(at: i)
                                 print("removed")
                                 break
                             }
                         }
                         print("after remove in attached\(self.route)")
+                        self.action = ac
                         //gggggg
                         
                     },label:{
-                        Text("next".uppercased())
+                        Image(systemName: "chevron.forward")
                             .font(.title3)
-                            .fontWeight(.bold)
+                            .foregroundColor(.white)
                             .padding()
+                            .frame(width: 100)
+                            
+
                     })
+                    .background(Color("wmm"))
+                    .clipShape(Capsule())
                     Spacer()
                 }
                 ScrollView(.vertical, showsIndicators: false, content: {

@@ -28,6 +28,8 @@ struct HomeView: View {
     
     let username : String
     
+    @State private var navigationId = UUID()
+    
  
     
     //@State var status = UserDefaults.standard.object(forKey: "status") as ?
@@ -132,6 +134,12 @@ struct HomeView: View {
                 .ignoresSafeArea(.all , edges: .top)
                
             }//: NAVIGITION
+            .id(navigationId)
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("popToRootView"))) { output in
+                            navigationId = UUID()
+                        }
+            .navigationViewStyle(StackNavigationViewStyle())
+                
            
             }else{
                 WatingView(status: $ststus, userName: dt?.data.userName ?? usernameCurrentUser)

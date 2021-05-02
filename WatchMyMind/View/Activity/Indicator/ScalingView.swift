@@ -288,7 +288,7 @@ struct ScalingView: View {
                         print(self.route.count)
                         if self.route.count == 0 {
                             
-                            if activity.link != "" || activity.photoURL != ""{
+                            if activity.outcomeReq.count < 0{
                                 action = NavigationTag.UPLOADING.rawValue
                             }else{
                                 //ending
@@ -296,7 +296,8 @@ struct ScalingView: View {
                                     action = NavigationTag.UPLOADING.rawValue
                                 }else{
                                     //end
-                                        action = 200
+                                        action = 0
+                                    NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
                                 }
                                 //eof - ending
                             }

@@ -65,13 +65,15 @@ struct NotingView: View {
                     print("btn")
                     print("outcome-->\(activity.outcomeReq.count)")
               
+                    //ending
                     if activity.outcomeReq.count != 0 {
                         action = NavigationTag.UPLOADING.rawValue
-                        
                     }else{
                         //end
-                         action = 200
+                            action = 0
+                        NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
                     }
+                    //eof - ending
                    
                 }, label: {
                     Text("next")

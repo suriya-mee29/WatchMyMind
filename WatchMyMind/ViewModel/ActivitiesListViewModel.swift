@@ -151,7 +151,6 @@ class ActivitiesListViewModel : ObservableObject{
                                                                 
                                                             }
                                                             let path = "assignment/\(AssignmentDocument.documentID)/activityList/\(dc.documentID)/results"
-                                                            print("path --> \(path)")
         
                                                             let manualActivityTemp = ManualActivitiesModel(createdby: createdby, description: description!, imageIcon: imageIcon!, title: title!, type: type!, link: link, photoURL: photoURL, indicator: indicators!, progress: progress!,everyDay: everyDay!, time: time! , round: round! , NoOfDate : NoOFDate,outcomeReq: outcomeRequest, activityPath: path)
                                                             

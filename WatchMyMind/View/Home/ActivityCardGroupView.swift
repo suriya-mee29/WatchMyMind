@@ -40,16 +40,15 @@ struct ActivityCardGroupView: View {
                         
                         if type == activityType.AUTO{
                         ForEach( autoActivitys) { activity in
+                           
                             //CADR
                             NavigationLink(
                                 destination: DescriptionView(activity: activity , type: type, navigationTag: .TO_BIODATA_VIEW)
                                     .environment(\.managedObjectContext, viewContext),
-                                isActive: $isActive,
                                 label: {
                                     ActivityCardView(
-                                                                            activity: activity ,
-                                                                            type: type.rawValue, progressColor: (type != activityType.MANUAL) ? Color("wmm") : Color("blue1"),
-                                                                            backgroundColor: (type != activityType.MANUAL) ? Color.white : Color.white )
+                                    activity: activity ,
+                                    type: type.rawValue, progressColor: (type != activityType.MANUAL) ? Color("wmm") : Color("blue1"),backgroundColor: (type != activityType.MANUAL) ? Color.white : Color.white )
                                     
                                 })
                          
@@ -63,8 +62,8 @@ struct ActivityCardGroupView: View {
                             NavigationLink(
                                 destination:
                                     DescriptionView(manualActivity: activity , type: type, navigationTag: .OTHER)
-                                    .environment(\.managedObjectContext, viewContext)
-                                ,
+                                    .environment(\.managedObjectContext, viewContext),
+                                
                                 label: {
                                     ActivityCardView(
                                         manualActivity: activity ,
