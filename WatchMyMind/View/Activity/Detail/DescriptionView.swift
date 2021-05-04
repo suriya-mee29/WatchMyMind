@@ -193,7 +193,7 @@ struct DescriptionView: View {
                         }else{
                             // manual activity router
                             if type == .MANUAL {
-                                let result : [String:Any] = ["startDate": Data()]
+                                let result : [String:Any] = ["startDate":Date()]
                                 self.results = result
                                 for i in 0...(self.router.count-1){
                                     let tag = getTag(navigationTag: self.router[i])

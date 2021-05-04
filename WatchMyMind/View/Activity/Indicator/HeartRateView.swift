@@ -35,16 +35,22 @@ struct HeartRateView: View {
     @State var startDate  = Date()
     @State var stopDate  = Date()
     
+    @State var hr : [Double] = [Double]()
+    
    
     
     let activity : ManualActivitiesModel
     @State var results : [String:Any]
     
- 
-   
-
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-        let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    let heartRateUnit:HKUnit = HKUnit(from: "count/min")
+    @ObservedObject var activityStorage = ActivityStorage()
+    
+    @State var showAlert : Bool = false
+    @State var alertMessage : String = ""
+    @State var headerMag : String = ""
+    
     // MARK: - BODY
     var body: some View {
         ZStack {
@@ -85,61 +91,82 @@ struct HeartRateView: View {
                                 self.stopDate = Date()
                                 //save result
                                 var AVGheartRate : Double = -1.0
-                                healthStore.getAVGHeartRate(startDate: self.startDate, endDate: self.stopDate) { statistic in
-                                    if let quantity = statistic?.averageQuantity(){
+                                print("hello HR")
+                                
+                                
+                                
+                                // guery - (1) Double callection of Heart rate
+                                self.healthStore.getHeartRateBetween2(startDate: self.startDate, endDate: self.stopDate) { (results) in
+                                    guard let results = results else {
+                                        print("error from get Double callection of Heart rate")
+                                        return
+                                    }
+                                    for (_,result) in results.enumerated(){
+                                        guard let currData:HKQuantitySample = result as? HKQuantitySample else {
+                                            print("error from converst HKQuantitySample (currData)")
+                                            return }
+                                        //1.2 append to Double collection
+                                       let crHr = currData.quantity.doubleValue(for: self.heartRateUnit)
                                         
-                                        let beats: Double? = quantity.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute()))
-                                        AVGheartRate = beats ?? -1.0
-                                       
-                                        self.results["AVGheartRate"] = AVGheartRate
-                                        self.results["timeInterval"] = stopwatch.tmInterval
+                                        self.hr.append(crHr)
                                         
                                     }
-                                    
-                                }
-                                if localRoute.count != 0 {
-                                for i in 0...(self.route.count - 1 ){
-                                    let tag = getTag(navigationTag: self.route[i])
-                                    if route[i] == "scaling"{
-                                        if action! < tag {
-                                            action = NavigationTag.TO_SCALING_VIEW.rawValue
-                                        }
-                                    }
-                                    if route[i] == "noting"{
-                                        if action! < tag {
-                                            action = NavigationTag.TO_NOTING_VIEW.rawValue
-                                        }
-                                    }
+                                    print("hr--> \(self.hr)")
+                                    self.results["endDate"] = self.stopDate
+                                    self.results["timeInterval"] = stopwatch.tmInterval
+                                    self.results["heartRateArr"] = self.hr
                                     
                                     
-                                }
+                                    print("Decide point")
+                                    if self.route.count != 0 {
+                                        print("goto some view")
                                     for i in 0...(self.route.count - 1 ){
-                                        if action == getTag(navigationTag: self.route[i]){
-                                            self.route.remove(at: i)
-                                            print("removed")
-                                            break
+                                        let tag = getTag(navigationTag: self.route[i])
+                                        if route[i] == "scaling"{
+                                            if self.action! < tag {
+                                                self.action = NavigationTag.TO_SCALING_VIEW.rawValue
+                                            }
                                         }
-                                    }
-                                }else{
-                                  
-                                    if activity.outcomeReq.count < 0{
+                                        if route[i] == "noting"{
+                                            if self.action! < tag {
+                                                self.action = NavigationTag.TO_NOTING_VIEW.rawValue
+                                            }
+                                        }
                                         
-                                        action = NavigationTag.UPLOADING.rawValue
+                                        
+                                    }
+                                        for i in 0...(self.route.count - 1 ){
+                                            if self.action == getTag(navigationTag: self.route[i]){
+                                                self.route.remove(at: i)
+                                                print("removed from hr")
+                                                break
+                                            }
+                                        }
                                     }else{
+                                        
                                         //ending
                                         if activity.outcomeReq.count != 0 {
                                             action = NavigationTag.UPLOADING.rawValue
-                                            
-                                        }else{
-                                            //end
-                                             action = 0
-                                            NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
-                                            
-
+                                        }else{//end
+                                                action = 0
+                                            print("Results : \(self.results)")
+                                            activityStorage.saveResults(path: activity.activityPath, results: self.results) { seccess , msg in
+                                                
+                                                if seccess {
+                                                NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+                                                }else{
+                                                    self.headerMag = "error"
+                                                    self.alertMessage = "error from database: \(msg) "
+                                                    self.showAlert = true
+                                                }
+                                            }
                                         }
                                         //eof - ending
+                                        
                                     }
-                                }
+
+                                    
+                                } //EO - getHeartRateBetween2
                                 
                                 
                             } else {
@@ -228,6 +255,10 @@ struct HeartRateView: View {
             })
         } //: ZSTACK
         .ignoresSafeArea(.all,edges: .all)
+        .alert(isPresented: $showAlert , content: {
+            Alert(title: Text(self.headerMag.uppercased()), message: Text("\(self.alertMessage)"), dismissButton: .default(Text("OK!")))
+                    }
+        )
     }
 }
 // MARK: -PREVIEW

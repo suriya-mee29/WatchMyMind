@@ -18,7 +18,28 @@ struct UploadingView: View {
     @State var isPhoto : Bool = false
     @State var isLink : Bool = false
     
+    @ObservedObject var activityStorage = ActivityStorage()
+    
+    
+    @State var showAlert : Bool = false
+    @State var alertMessage : String = ""
+    @State var headerMag : String = ""
+    
     @State var results : [String:Any]
+    
+    // MARK: - function
+    private func save (path: String , results : [String: Any]){
+        activityStorage.saveResults(path: path, results: results) { seccess , msg in
+            
+            if seccess {
+            NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+            }else{
+                self.headerMag = "error"
+                self.alertMessage = "error from database: \(msg) "
+                self.showAlert = true
+            }
+        }
+    }
     var body: some View {
         ZStack {
             VStack {
@@ -100,7 +121,42 @@ struct UploadingView: View {
                         Button(action: {
                             //storg data to DB
                             //ending
-                                NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+                            if isLink{
+                                if self.link != ""{
+                                self.results["link"] = self.link
+                                }else{
+                                    self.headerMag = "Invalide"
+                                    self.alertMessage = "Please attach link your link before submission"
+                                    self.showAlert = true
+                                }
+                            }
+                            
+                            
+                            if isPhoto {
+                                if let data = image?.pngData(){
+                                    let id = UUID().uuidString
+                                    activityStorage.uploadImage(data: data, filename: id) { seccess, message in
+                                        
+                                        if seccess , let msg = message{
+                                            self.results["photoURL"] = msg
+                                            
+                                            self.save(path: self.activity.activityPath, results: self.results)
+                                            
+                                        }else{
+                                            self.headerMag = "error"
+                                            self.alertMessage = "error from database: \(message ?? "error") "
+                                            self.showAlert = true
+                                        }
+                                    }
+                                }
+                                
+                                
+                            }else{
+                                self.save(path: self.activity.activityPath, results: self.results)
+                            }
+                            
+                           
+                                
                             //eof - ending
                             
                         }, label: {
@@ -118,6 +174,10 @@ struct UploadingView: View {
             }
            
         }//ZSTACK
+        .alert(isPresented: $showAlert , content: {
+            Alert(title: Text(self.headerMag.uppercased()), message: Text("\(self.alertMessage)"), dismissButton: .default(Text("OK!")))
+                    }
+        )
     
         .onAppear(perform: {
             if activity.outcomeReq.count > 0{

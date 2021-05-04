@@ -14,7 +14,15 @@ struct NotingView: View {
     @State var action : Int? = 0
     @State var results : [String:Any]
     
+    @State var showAlert : Bool = false
+    @State var alertMessage : String = ""
+    @State var headerMag : String = ""
+    
     let activity : ManualActivitiesModel
+  
+    
+    @ObservedObject var textRecognition = TextRecognition()
+    @ObservedObject var activityStorage = ActivityStorage()
     // MARK: - BODY
     var body: some View {
         ZStack (alignment: .topTrailing){
@@ -34,7 +42,7 @@ struct NotingView: View {
                     .font(.title2)
                     .fontWeight(.regular)
                     .padding(.top)
-                
+              
                 TextEditor(text: $inputText)
                     .font(.body)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -62,22 +70,67 @@ struct NotingView: View {
                 })
                 .frame(height : 0)
                 Button(action: {
-                    print("btn")
-                    print("outcome-->\(activity.outcomeReq.count)")
+                    print("in action at noting view")
+                    if inputText != "" {
+                        self.results["noting"] = self.inputText
+                        
+                        textRecognition.SSense(text: self.inputText) { ssense in
+                            if let ssenseRes = ssense {
+                                print("ssense is true")
+                                self.results["score"] = ssenseRes.sentiment.score
+                                self.results["polarity-neg"] = ssenseRes.sentiment.polarity_neg
+                                self.results["polarity-pos"] = ssenseRes.sentiment.polarity_pos
+                                self.results["polarity"] = ssenseRes.sentiment.polarity
+                                
+                                self.results["request"] = ssenseRes.intention.request
+                                self.results["sentiment"] = ssenseRes.intention.sentiment
+                                self.results["question"] = ssenseRes.intention.question
+                                self.results["announcement"] = ssenseRes.intention.question
+                            }
+                            
+                            //ending
+                            if activity.outcomeReq.count != 0 {
+                                action = NavigationTag.UPLOADING.rawValue
+                            }else{//end
+                                    action = 0
+                                print("Results : \(self.results)")
+                                activityStorage.saveResults(path: activity.activityPath, results: self.results) { seccess , msg in
+                                    
+                                    if seccess {
+                                    NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+                                    }else{
+                                        self.headerMag = "error"
+                                        self.alertMessage = "error from database: \(msg) "
+                                        self.showAlert = true
+                                    }
+                                }
+                           
+                            }
+                            //eof - ending
+                            
+                        }
               
-                    //ending
-                    if activity.outcomeReq.count != 0 {
-                        action = NavigationTag.UPLOADING.rawValue
+                   
+                        
+                        
                     }else{
-                        //end
-                            action = 0
-                        NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+                        self.alertMessage = "Please write your note"
+                        self.headerMag = "noting invalided"
+                        self.showAlert = true
+                       
                     }
-                    //eof - ending
+                    
+                    
                    
                 }, label: {
-                    Text("next")
+                    Image(systemName: "chevron.forward")
+                        .font(.title3)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(width: 100)
                 })
+                .background(Color("wmm"))
+                .clipShape(Capsule())
                 .padding()
             }
                 
@@ -86,6 +139,10 @@ struct NotingView: View {
         .onAppear(perform: {
             action = 0
         })
+        .alert(isPresented: $showAlert , content: {
+            Alert(title: Text(self.headerMag.uppercased()), message: Text("\(self.alertMessage)"), dismissButton: .default(Text("OK!")))
+                    }
+        )
     }
 }
 #if canImport(UIKit)

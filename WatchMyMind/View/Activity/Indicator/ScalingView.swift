@@ -26,6 +26,7 @@ struct ScalingView: View {
     
     @State var showAlert : Bool = false
     @State var alertMessage : String = ""
+    @State var headerMag : String = ""
     
     
     @State var selectedID : String = ""
@@ -34,6 +35,8 @@ struct ScalingView: View {
     @State var isSelected_3 : Bool = false
     @State var isSelected_4 : Bool = false
     @State var isSelected_5 : Bool = false
+    
+    @ObservedObject var activityStorage = ActivityStorage()
     
    
     //MARK: - FUNCTION
@@ -294,10 +297,20 @@ struct ScalingView: View {
                                 //ending
                                 if activity.outcomeReq.count != 0 {
                                     action = NavigationTag.UPLOADING.rawValue
-                                }else{
-                                    //end
+                                }else{//end
                                         action = 0
-                                    NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+                                    print("Results : \(self.results)")
+                                    activityStorage.saveResults(path: activity.activityPath, results: self.results) { seccess , msg in
+                                        
+                                        if seccess {
+                                        NotificationCenter.default.post(name: Notification.Name("popToRootView"), object: nil)
+                                        }else{
+                                            self.headerMag = "error"
+                                            self.alertMessage = "error from database: \(msg) "
+                                            self.showAlert = true
+                                        }
+                                    }
+                               
                                 }
                                 //eof - ending
                             }
@@ -309,10 +322,17 @@ struct ScalingView: View {
                     }else{
                             self.showAlert = true
                             self.alertMessage = "Please select your Feeling level"
+                            self.headerMag = "invalide"
                     }
                     }, label: {
-                        Text("next")
+                        Image(systemName: "chevron.forward")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(width: 100)
                     })
+                    .background(Color("wmm"))
+                    .clipShape(Capsule())
                 }//: VSTCAK
                 .padding(.top)
                
@@ -322,7 +342,7 @@ struct ScalingView: View {
         }
         .ignoresSafeArea(.all,edges: .all)
         .alert(isPresented: $showAlert , content: {
-            Alert(title: Text("lnvalide".uppercased()), message: Text("\(self.alertMessage)"), dismissButton: .default(Text("OK!")))
+            Alert(title: Text(self.headerMag.uppercased()), message: Text("\(self.alertMessage)"), dismissButton: .default(Text("OK!")))
                     }
         )
         .onAppear(perform: {

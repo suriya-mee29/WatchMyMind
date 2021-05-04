@@ -44,6 +44,7 @@ struct ScalingTemporaryView: View {
                             self.route.remove(at: i)
                             print("remore at temp")
                             print("\(self.route)")
+                            self.results["endDate"] = Date()
                             action = NavigationTag.TO_SCALING_VIEW.rawValue
                             break
                         }

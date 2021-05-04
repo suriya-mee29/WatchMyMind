@@ -147,7 +147,6 @@ struct HomeView: View {
             
         }
         .onAppear(perform: {
-
             user.getUserSatus(username: dt?.data.userName ?? usernameCurrentUser){ status in
                 self.ststus = status
                 print(status)

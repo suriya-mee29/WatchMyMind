@@ -57,6 +57,7 @@
 		517050CB2632D54E006C5FA9 /* AsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517050CA2632D54E006C5FA9 /* AsyncImage.swift */; };
 		517050D02632DF1B006C5FA9 /* AttachedFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517050CF2632DF1B006C5FA9 /* AttachedFileView.swift */; };
 		517050D32637FAE1006C5FA9 /* ScalingTemporaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517050D22637FAE0006C5FA9 /* ScalingTemporaryView.swift */; };
+		517795A026400769005ED684 /* ActivityStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5177959F26400769005ED684 /* ActivityStorage.swift */; };
 		517D645B262EC75A0051009C /* BBRefreshableScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 517D645A262EC75A0051009C /* BBRefreshableScrollView */; };
 		517D6464262EE43F0051009C /* AutoActivitiesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D6463262EE43F0051009C /* AutoActivitiesModel.swift */; };
 		517D6467262EE5860051009C /* ManualActivitiesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D6466262EE5860051009C /* ManualActivitiesModel.swift */; };
@@ -145,6 +146,7 @@
 		517050CA2632D54E006C5FA9 /* AsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImage.swift; sourceTree = "<group>"; };
 		517050CF2632DF1B006C5FA9 /* AttachedFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachedFileView.swift; sourceTree = "<group>"; };
 		517050D22637FAE0006C5FA9 /* ScalingTemporaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalingTemporaryView.swift; sourceTree = "<group>"; };
+		5177959F26400769005ED684 /* ActivityStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityStorage.swift; sourceTree = "<group>"; };
 		517D6463262EE43F0051009C /* AutoActivitiesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoActivitiesModel.swift; sourceTree = "<group>"; };
 		517D6466262EE5860051009C /* ManualActivitiesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualActivitiesModel.swift; sourceTree = "<group>"; };
 		517D646A262EF9500051009C /* ActivitiesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesListViewModel.swift; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 				517D646A262EF9500051009C /* ActivitiesListViewModel.swift */,
 				515FC46C263C1D5A0036E947 /* TextRecognition.swift */,
 				515FC47D263EA7700036E947 /* NavigationControl.swift */,
+				5177959F26400769005ED684 /* ActivityStorage.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -648,6 +651,7 @@
 				516B783B25CACD8E00095A04 /* DescriptionView.swift in Sources */,
 				510E3789260479EC00282E38 /* AutoActivityModel.swift in Sources */,
 				51D6A7C825E6323F00DACE58 /* StepsModel.swift in Sources */,
+				517795A026400769005ED684 /* ActivityStorage.swift in Sources */,
 				51D6A7AB25E4CB4100DACE58 /* CodeableBundleExtension.swift in Sources */,
 				517F6DE225D53C3400E53F19 /* BioDataCardIView.swift in Sources */,
 				51D6A79D25E3C16C00DACE58 /* BackgroundTimer.swift in Sources */,

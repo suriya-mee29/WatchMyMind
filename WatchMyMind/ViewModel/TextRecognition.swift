@@ -10,8 +10,11 @@ class TextRecognition: ObservableObject {
     let API_KEY = "ejaBWl1XONSdM2iBMrj7Jhisurd1h0li"
     
     public func SSense(text: String , completion : @escaping(SsenseModel?) ->Void ){
+        let myText = text.unicodeScalars
+            .filter { !$0.properties.isEmojiPresentation}
+            .reduce("") { $0 + String($1) }
         
-        let queryItems = [URLQueryItem(name: "text", value: text)]
+        let queryItems = [URLQueryItem(name: "text", value: myText)]
         var urlComps = URLComponents(string: APIForThai_SSENSE)!
         urlComps.queryItems = queryItems
      
