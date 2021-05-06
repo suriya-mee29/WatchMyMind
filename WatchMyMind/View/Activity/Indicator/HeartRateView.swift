@@ -264,7 +264,7 @@ struct HeartRateView: View {
 // MARK: -PREVIEW
 struct HeartRateView_Previews: PreviewProvider {
     static var previews: some View {
-        HeartRateView(localRoute: [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: ""), results: [String : Any]())
+        HeartRateView(localRoute: [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any]())
             .preferredColorScheme(.light)
             
     }

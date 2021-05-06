@@ -58,6 +58,7 @@
 		517050D02632DF1B006C5FA9 /* AttachedFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517050CF2632DF1B006C5FA9 /* AttachedFileView.swift */; };
 		517050D32637FAE1006C5FA9 /* ScalingTemporaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517050D22637FAE0006C5FA9 /* ScalingTemporaryView.swift */; };
 		517795A026400769005ED684 /* ActivityStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5177959F26400769005ED684 /* ActivityStorage.swift */; };
+		517795A426441996005ED684 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 517795A326441996005ED684 /* FirebaseMessaging */; };
 		517D645B262EC75A0051009C /* BBRefreshableScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 517D645A262EC75A0051009C /* BBRefreshableScrollView */; };
 		517D6464262EE43F0051009C /* AutoActivitiesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D6463262EE43F0051009C /* AutoActivitiesModel.swift */; };
 		517D6467262EE5860051009C /* ManualActivitiesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D6466262EE5860051009C /* ManualActivitiesModel.swift */; };
@@ -75,7 +76,6 @@
 		5190F2F225EBAD5F00777749 /* URL+APP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5190F2F125EBAD5F00777749 /* URL+APP.swift */; };
 		5190F2FC25ECF28000777749 /* MindfulnessModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5190F2FB25ECF28000777749 /* MindfulnessModel.swift */; };
 		5190F30125ECF48800777749 /* MindfulnessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5190F30025ECF48800777749 /* MindfulnessStore.swift */; };
-		5190F30525EF491700777749 /* NavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5190F30425EF491700777749 /* NavView.swift */; };
 		519589FB2601C2510072CE75 /* HealthKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519589FA2601C2510072CE75 /* HealthKitExtension.swift */; };
 		51A908FA25C1C77F00F1B77B /* WatchMyMindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A908F925C1C77F00F1B77B /* WatchMyMindApp.swift */; };
 		51A908FC25C1C77F00F1B77B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A908FB25C1C77F00F1B77B /* ContentView.swift */; };
@@ -163,7 +163,6 @@
 		5190F2F125EBAD5F00777749 /* URL+APP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+APP.swift"; sourceTree = "<group>"; };
 		5190F2FB25ECF28000777749 /* MindfulnessModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindfulnessModel.swift; sourceTree = "<group>"; };
 		5190F30025ECF48800777749 /* MindfulnessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindfulnessStore.swift; sourceTree = "<group>"; };
-		5190F30425EF491700777749 /* NavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavView.swift; sourceTree = "<group>"; };
 		519589FA2601C2510072CE75 /* HealthKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitExtension.swift; sourceTree = "<group>"; };
 		51A908F625C1C77F00F1B77B /* WatchMyMind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchMyMind.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		51A908F925C1C77F00F1B77B /* WatchMyMindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMyMindApp.swift; sourceTree = "<group>"; };
@@ -197,6 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				517795A426441996005ED684 /* FirebaseMessaging in Frameworks */,
 				51D6A7C425E628E600DACE58 /* HealthKit.framework in Frameworks */,
 				510E37862603432E00282E38 /* SwiftUICharts in Frameworks */,
 				515F08212608A7EF001A9F6A /* FirebaseAnalytics in Frameworks */,
@@ -215,7 +215,6 @@
 			isa = PBXGroup;
 			children = (
 				515F0855261B4847001A9F6A /* wating */,
-				5190F30325EF48F400777749 /* Navigatior */,
 				516B783825CACD1600095A04 /* Activity */,
 				512A94BD25C423BF000A75AD /* Home */,
 				512A94B525C2D25D000A75AD /* Login */,
@@ -348,14 +347,6 @@
 				517050D22637FAE0006C5FA9 /* ScalingTemporaryView.swift */,
 			);
 			path = Indicator;
-			sourceTree = "<group>";
-		};
-		5190F30325EF48F400777749 /* Navigatior */ = {
-			isa = PBXGroup;
-			children = (
-				5190F30425EF491700777749 /* NavView.swift */,
-			);
-			path = Navigatior;
 			sourceTree = "<group>";
 		};
 		51A908ED25C1C77E00F1B77B = {
@@ -520,6 +511,7 @@
 				515F08242608A7EF001A9F6A /* FirebaseAuth */,
 				515F08262608A7EF001A9F6A /* FirebaseFirestore */,
 				517D645A262EC75A0051009C /* BBRefreshableScrollView */,
+				517795A326441996005ED684 /* FirebaseMessaging */,
 			);
 			productName = WatchMyMind;
 			productReference = 51A908F625C1C77F00F1B77B /* WatchMyMind.app */;
@@ -637,7 +629,6 @@
 				5137355F25C83C4600848F63 /* ActivityCardView.swift in Sources */,
 				512A94C325C427F7000A75AD /* NavigationBarView.swift in Sources */,
 				5137355725C6B9AC00848F63 /* HeaderView.swift in Sources */,
-				5190F30525EF491700777749 /* NavView.swift in Sources */,
 				5190F2F225EBAD5F00777749 /* URL+APP.swift in Sources */,
 				517F6DF625D691D900E53F19 /* MoreBioDataView.swift in Sources */,
 				515FC46B263AFC650036E947 /* UploadingView.swift in Sources */,
@@ -920,6 +911,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 515F081F2608A7EF001A9F6A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		517795A326441996005ED684 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 515F081F2608A7EF001A9F6A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		517D645A262EC75A0051009C /* BBRefreshableScrollView */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -9,13 +9,17 @@ import SwiftUI
 
 struct ActivityCardView: View {
     // MARK: - PROPERTIES
-    var activity : AutoActivitiesModel =  AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0)
-    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "")
+    var activity : AutoActivitiesModel =  AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date())
+    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date())
     let type : String
     let progressColor : Color
     let backgroundColor : Color
     
     @State private var isAnnimating : Bool = false
+    @State private var toDo : Int = 0
+    @State private var done : Int = 0
+    var activityStroage = ActivityStorage()
+    
     // MARK: - BODY
     var body: some View {
         VStack {
@@ -36,7 +40,7 @@ struct ActivityCardView: View {
                 .frame(width: 80, height: 80)
                 .scaleEffect(isAnnimating ? 1.0 : 0.6)
            
-            Text("Goals \( (type == activityType.AUTO.rawValue ? activity.progress : manualActivity.progress) )/100")
+            Text(done != 0 ? "Done \(done) times" : "")
                 .foregroundColor(Color("stand"))
                   .font(.footnote)
                   .fontWeight(.bold)
@@ -56,6 +60,22 @@ struct ActivityCardView: View {
             withAnimation(.easeOut(duration: 0.5)){
                 isAnnimating = true
             }
+            self.activityStroage.activityCount(path: type == activityType.AUTO.rawValue ? self.activity.activityPath: manualActivity.activityPath) { success, numberOfCollection in
+                if success{
+                    self.done = numberOfCollection
+                    if type == activityType.AUTO.rawValue {
+                        
+                        self.toDo = activity.todo
+                        
+                    }else{
+                        self.toDo =  manualActivity.todo
+                    }
+                    
+                }else{
+                    
+                }
+            }
+
         })
         .onDisappear(perform: {
             isAnnimating = false
@@ -66,7 +86,7 @@ struct ActivityCardView: View {
      // MARK: -PREVIEW
 struct ActivityCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ActivityCardView(activity : AutoActivitiesModel(createdby: "de", description: "ssssss", imageIcon: "play2", title: "wwwwww", type: activityType.AUTO.rawValue, progress: 21 , everyDay: true, time: 0, round: 0, NoOfDate: 0), type: "AUTO", progressColor: Color.green, backgroundColor: Color.white)
+        ActivityCardView(activity : AutoActivitiesModel(createdby: "de", description: "ssssss", imageIcon: "play2", title: "wwwwww", type: activityType.AUTO.rawValue, progress: 21 , everyDay: true, time: 0, round: 0, NoOfDate: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), type: "AUTO", progressColor: Color.green, backgroundColor: Color.white)
             .previewLayout(.sizeThatFits)
             .padding()
     }

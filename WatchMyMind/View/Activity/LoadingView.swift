@@ -18,6 +18,10 @@ struct LoadingView: View {
     @State var num : Int = 0
     
     @Binding var showModal: Bool
+    let isActivity : Bool
+    let count : Int
+    let activityPath : String
+
    
     var decription : String
     
@@ -42,6 +46,11 @@ struct LoadingView: View {
                    
             ZStack {
                 Button(action: {
+                    if isActivity {
+                        //mindfulness
+                    }else{
+                        //execrise
+                    }
                     showModal = false
                 }, label: {
                     Text("OK")
@@ -69,7 +78,7 @@ struct LoadingView: View {
 struct LoadingView_Previews: PreviewProvider {
     @State static var showModal = true
     static var previews: some View {
-        LoadingView(showModal: $showModal, decription: "Please use your Apple Watch to complete an activity by use The Breathe app")
+        LoadingView(showModal: $showModal, isActivity: false, count: 0 , activityPath: "", decription: "Please use your Apple Watch to complete an activity by use The Breathe app")
             .preferredColorScheme(.dark)
     }
 }

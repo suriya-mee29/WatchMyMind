@@ -8,6 +8,7 @@
 import SwiftUI
 import Firebase
 import BBRefreshableScrollView
+import UserNotifications
 
 struct HomeView: View {
     
@@ -23,12 +24,15 @@ struct HomeView: View {
     
     
     @State var ststus : String = "inactive"
-    
+    @State var indicator = [String]()
     @ObservedObject var activities : ActivitiesListViewModel
+    @ObservedObject var acStorage = ActivityStorage()
     
     let username : String
     
     @State private var navigationId = UUID()
+    
+    let currentusername: String
     
  
     
@@ -43,6 +47,7 @@ struct HomeView: View {
         self.username = username
         
         self.activities = ActivitiesListViewModel(username: username)
+        self.currentusername = username
         
     }
     // MARK: - BODY
@@ -56,7 +61,7 @@ struct HomeView: View {
                         VStack (spacing:0){
                             ZStack (alignment: .top){
                                 
-                                HeaderView( user: $user, dt: $dt)
+                                HeaderView( observed: self.$indicator , user: $user, dt: $dt, currentusername: self.currentusername)
                                     .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 5 )
                                     .zIndex(1)
                                 
@@ -147,6 +152,23 @@ struct HomeView: View {
             
         }
         .onAppear(perform: {
+           /* let content = UNMutableNotificationContent()
+            content.title = "Watch My Mind"
+            content.subtitle = "You have activities to do, Lest's do it."
+            content.sound = UNNotificationSound.default
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+            let req = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                //UNCalendarNotificationTrigger(dateMatching: <#T##DateComponents#>, repeats: <#T##Bool#>)
+            UNUserNotificationCenter.current().add(req) */
+            
+           
+            self.activities.getObserved(){ seccess , indicator in
+                if seccess{
+                    self.indicator = indicator
+                }
+                
+            }
             user.getUserSatus(username: dt?.data.userName ?? usernameCurrentUser){ status in
                 self.ststus = status
                 print(status)

@@ -11,6 +11,7 @@ class ActivitiesListViewModel : ObservableObject{
     
     @Published var autoActivities : [AutoActivitiesModel]?
     @Published var manualActivities : [ManualActivitiesModel]?
+    @Published var observed :[ String] = [String]()
     private let store = Firestore.firestore()
     let username : String
     
@@ -33,6 +34,164 @@ class ActivitiesListViewModel : ObservableObject{
             
             
         }
+    }
+    private func getEndDate(completion : @escaping (Date,String)->Void){
+       
+        
+        store.collection("assignment")
+            .whereField("client", isEqualTo: username)
+            .whereField("current", isEqualTo: true)
+            .getDocuments(){ (querySnapshot, err) in
+                if let err = err {
+                            print("Error getting documents: \(err)")
+                             completion(Date(), "")
+                        } else {
+                            
+                           
+                            for assignmentDocument in querySnapshot!.documents {
+//                                print("\(assignmentDocument.documentID) => \(assignmentDocument.data())")
+                                let data = assignmentDocument.data()
+                                
+                                if let enddate =  data["endDate"] as? Timestamp{
+                                    let endDateValue = enddate.dateValue()
+                                    let path = "assignment/\(assignmentDocument.documentID)/Observation"
+                                    print("enddate \(path)")
+                                    completion(endDateValue, path)
+                                }else{
+                                    
+                                    completion(Date(), "")
+                                }
+                                
+                            }
+                        }
+            }
+        
+    }
+    
+    
+    public func saveObservedIndicator(aSleep:String = "" ,inBed:String = "",burning:String = "" ,moving:Int = 0,standing: String = "",stepping:Int = 0 ,completion : @escaping (Bool , String) -> Void){
+        
+        self.getEndDate(){ date, path in
+            print("get date/path \(date)---\(path)")
+            if path != ""{
+            let toDay = Date()
+            if date >= toDay {
+            let key = "aDate"
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d|MMM|y"
+            let docKey = formatter.string(from: toDay)
+                
+            let defaults = UserDefaults.standard
+            if let aDate = defaults.object(forKey: key) as? Date {
+                if Calendar.current.isDateInToday(aDate){
+                    // to set (update)
+                    self.addObservedIndicator(aSleep: aSleep, inBed: inBed, burning: burning, moving: moving, standing: standing, stepping: stepping, path: path, key: docKey ,merge: true){ success in
+                        if success {
+                            completion(true,"sucess")
+                            print("------- merge ------")
+                        }else{
+                            completion(false,"error from add new data to firebase")
+                        }
+                    }
+                }else{
+                    // add new
+                    self.addObservedIndicator(aSleep: aSleep, inBed: inBed, burning: burning, moving: moving, standing: standing, stepping: stepping, path: path, key: docKey){ success in
+                        if success {
+                            completion(true,"sucess")
+                        }else{
+                            completion(false,"error from add new data to firebase")
+                        }
+                    }
+                    
+                }
+                
+            }else{
+                // base case
+                // add new
+                self.addObservedIndicator(aSleep: aSleep, inBed: inBed, burning: burning, moving: moving, standing: standing, stepping: stepping, path: path, key: docKey){ success in
+                    if success {
+                        completion(true,"sucess")
+                    }else{
+                        completion(false,"error from add new data to firebase")
+                    }
+                }
+
+               
+            }
+           
+            defaults.set(toDay, forKey: key)
+           }
+
+            
+           }
+        }
+    }
+    
+    private func updateObservedIndicator(aSleep:String = "" ,inBed:String = "",burning:String = "" ,moving:Int = 0,standing: String = "",stepping:Int = 0,path: String,key :String ,handerler: @escaping (Bool)->Void){
+        let ref = store.collection(path).document(key)
+        ref.updateData([
+            "aSleep" : aSleep,
+            "inBed" : inBed,
+            "moving" : moving,
+            "standing" : standing,
+            "stepping" : stepping
+        ]){ err in
+            if let err = err {
+                print("Error updating document: \(err)")
+                        handerler(false)
+                
+            } else {
+                print("Document successfully updated")
+                handerler(true)
+            }
+        }
+    }
+    private func addObservedIndicator(aSleep:String = "" ,inBed:String = "",burning:String = "" ,moving:Int = 0,standing: String = "",stepping:Int = 0,path: String,key :String , merge : Bool = false ,handerler: @escaping (Bool)->Void){
+        let ref = store.collection(path).document(key)
+            ref.setData([
+                "aSleep" : aSleep,
+                "inBed" : inBed,
+                "moving" : moving,
+                "standing" : standing,
+                "stepping" : stepping
+        ],merge: merge){ err in
+            if let err = err {
+                print("Error setting document: \(err)")
+                handerler(false)
+            } else {
+                print("Document successfully setting")
+                handerler(true)
+            }
+        }
+        
+    }
+    
+    
+    
+    
+    public func getObserved(completion : @escaping (Bool , [String]) -> Void){
+        self.observed.removeAll()
+        store.collection("assignment")
+            .whereField("client", isEqualTo: username)
+            .whereField("current", isEqualTo: true)
+            .getDocuments(){ (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                }else{
+                    for assignmentDocument in querySnapshot!.documents{
+                        let result = assignmentDocument.data()
+                        if result["observed"] != nil {
+                            if let ob =  result["observed"] as? [String]{
+                                for indicator in ob {
+                                    self.observed.append(indicator)
+                                }
+                                print(self.observed)
+                                completion(true ,self.observed)
+                            }
+                        }
+                    }
+                }
+            }
     }
     
     public func getActivitiesList(completion : @escaping (Bool , String) -> Void){
@@ -100,8 +259,18 @@ class ActivitiesListViewModel : ObservableObject{
                                                             if (dc.data()["NoOfDate"] as? Int) != nil {
                                                                 NoOFDate = (dc.data()["NoOfDate"] as? Int)!
                                                             }
+                                                            let path = "assignment/\(AssignmentDocument.documentID)/activityList/\(dc.documentID)/results"
+                                                            let obPath = "assignment/\(AssignmentDocument.documentID)/observation"
+                                                            var startdate = Date()
+                                                            var enddate = Date()
+                                                            if let startTM = AssignmentDocument.data()["startDate"] as? Timestamp{
+                                                                startdate = startTM.dateValue()
+                                                            }
+                                                            if let endTM = AssignmentDocument.data()["startDate"] as? Timestamp{
+                                                                enddate = endTM.dateValue()
+                                                            }
                                                 
-                                                            let autoActivityTemp = AutoActivitiesModel(createdby: createdby!, description: description!, imageIcon: imageIcon!, title: title!, type: type!, progress: progress!, everyDay: everyDay!, time: time!, round: round!, NoOfDate: NoOFDate)
+                                                            let autoActivityTemp = AutoActivitiesModel(createdby: createdby!, description: description!, imageIcon: imageIcon!, title: title!, type: type!, progress: progress!, everyDay: everyDay!, time: time!, round: round!, NoOfDate: NoOFDate, activityPath: path, observedPath: obPath,startDate: startdate,endDate:enddate)
                                                             self.autoActivities?.append(autoActivityTemp)
                                                             
                                                         }else{
@@ -151,8 +320,17 @@ class ActivitiesListViewModel : ObservableObject{
                                                                 
                                                             }
                                                             let path = "assignment/\(AssignmentDocument.documentID)/activityList/\(dc.documentID)/results"
+                                                            let obPath = "assignment/\(AssignmentDocument.documentID)/observation"
+                                                            var startdate = Date()
+                                                            var enddate = Date()
+                                                            if let startTM = AssignmentDocument.data()["startDate"] as? Timestamp{
+                                                                startdate = startTM.dateValue()
+                                                            }
+                                                            if let endTM = AssignmentDocument.data()["startDate"] as? Timestamp{
+                                                                enddate = endTM.dateValue()
+                                                            }
         
-                                                            let manualActivityTemp = ManualActivitiesModel(createdby: createdby, description: description!, imageIcon: imageIcon!, title: title!, type: type!, link: link, photoURL: photoURL, indicator: indicators!, progress: progress!,everyDay: everyDay!, time: time! , round: round! , NoOfDate : NoOFDate,outcomeReq: outcomeRequest, activityPath: path)
+                                                            let manualActivityTemp = ManualActivitiesModel(createdby: createdby, description: description!, imageIcon: imageIcon!, title: title!, type: type!, link: link, photoURL: photoURL, indicator: indicators!, progress: progress!,everyDay: everyDay!, time: time! , round: round! , NoOfDate : NoOFDate,outcomeReq: outcomeRequest, activityPath: path, observedPath: obPath,startDate: startdate,endDate:enddate)
                                                             
                                                             self.manualActivities?.append(manualActivityTemp)
                                                             
@@ -185,6 +363,7 @@ class ActivitiesListViewModel : ObservableObject{
             }
         
     }
+    
     
    
     

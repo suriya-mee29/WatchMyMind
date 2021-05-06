@@ -66,7 +66,7 @@ struct ScalingTemporaryView: View {
 
 struct ScalingTemporaryView_Previews: PreviewProvider {
     static var previews: some View {
-        ScalingTemporaryView( localRoute: [] , results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: ""))
+        ScalingTemporaryView( localRoute: [] , results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()))
             
     }
 }

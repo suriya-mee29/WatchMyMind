@@ -10,8 +10,8 @@ import SwiftUI
 struct DescriptionView: View {
     // MARK: - PROPERTIES
     @State private var isAnnimatingImage : Bool = false
-    var activity : AutoActivitiesModel =   AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0)
-    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "")
+    var activity : AutoActivitiesModel =   AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 21, everyDay: true, time: 0, round: 0, NoOfDate: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date())
+    var manualActivity : ManualActivitiesModel = ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date())
     let type : activityType
     let navigationTag : NavigationTag
     @State var results : [String:Any] = [String:Any]()
@@ -138,14 +138,14 @@ struct DescriptionView: View {
                   Spacer()
                     ScrollView(.vertical, showsIndicators: false, content: {
                         NavigationLink(destination:
-                                        BioDataListView(headline: "BREATHING", isActivity: false)
+                                        BioDataListView(headline: "BREATHING", isActivity: false, autoActivity: self.activity)
                             .environment(\.managedObjectContext, viewContext)
                                        , tag: NavigationTag.TO_BIODATA_VIEW.rawValue, selection: $action){
                             EmptyView()
                             
                         }
                         NavigationLink(destination:
-                                        BioDataListView(headline: "EXERCISE", isActivity: true)
+                                        BioDataListView(headline: "EXERCISE", isActivity: true, autoActivity: self.activity)
                             .environment(\.managedObjectContext, viewContext)
                                        , tag: 2, selection: $action){
                             EmptyView()
@@ -181,8 +181,9 @@ struct DescriptionView: View {
                     }).frame(height: 0)
                     
                     
-                    //START BTN
+                    // MARK: - START BTN
                     Button(action: {
+                        // MARK: - auto activity router
                         self.action = navigationTag.rawValue
                         if action == NavigationTag.TO_BIODATA_VIEW.rawValue {
                             if activity.title == "Exercise" {
@@ -191,7 +192,7 @@ struct DescriptionView: View {
                                 // not do something
                             }
                         }else{
-                            // manual activity router
+                            // MARK: - manual activity router
                             if type == .MANUAL {
                                 let result : [String:Any] = ["startDate":Date()]
                                 self.results = result
@@ -293,7 +294,7 @@ struct DescriptionView: View {
 // MARK: -PREVIEW
 struct DescriptionView_Previews: PreviewProvider {
     static var previews: some View {
-        DescriptionView(activity: AutoActivitiesModel(createdby: "ss", description: "Exercises, including jogging, swimming, cycling, walking, gardening, and dancing, have been proved to reduce anxiety and depression. These improvements in mood are proposed to be caused by exercise-induced increase in blood circulation to the brain and by an influence on the hypothalamic-pituitary-adrenal(HPA) axis and, thus, on the physiologic reactivity to stress", imageIcon: "play2", title: "hello", type: activityType.AUTO.rawValue, progress: 30, everyDay: true, time: 30, round: 2, NoOfDate: 6), type: activityType.AUTO, navigationTag: NavigationTag.TO_BIODATA_VIEW)
+        DescriptionView(activity: AutoActivitiesModel(createdby: "ss", description: "Exercises, including jogging, swimming, cycling, walking, gardening, and dancing, have been proved to reduce anxiety and depression. These improvements in mood are proposed to be caused by exercise-induced increase in blood circulation to the brain and by an influence on the hypothalamic-pituitary-adrenal(HPA) axis and, thus, on the physiologic reactivity to stress", imageIcon: "play2", title: "hello", type: activityType.AUTO.rawValue, progress: 30, everyDay: true, time: 30, round: 2, NoOfDate: 6, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), type: activityType.AUTO, navigationTag: NavigationTag.TO_BIODATA_VIEW)
             
     }
 }

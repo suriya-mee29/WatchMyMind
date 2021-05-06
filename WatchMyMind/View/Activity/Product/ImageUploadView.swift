@@ -11,6 +11,7 @@ struct ImageUploadView: View {
     // MARK: - PROPERTIES
     @State private var isShowImagePicker : Bool = false
     @Binding  var image : UIImage?
+    @State var imageURL : URL?
     @State var sourseType : UIImagePickerController.SourceType = UIImagePickerController.SourceType.photoLibrary
     
     @State var isPicked : Bool = false
@@ -53,7 +54,7 @@ struct ImageUploadView: View {
                             .foregroundColor(.white)
                             .padding()
                     }).sheet(isPresented: $isShowImagePicker){
-                        imagePicker(image: self.$image , showImagePicker: self.$isShowImagePicker, sourceType: self.sourseType)
+                        imagePicker(image: self.$image , showImagePicker: self.$isShowImagePicker, imageURL: self.$imageURL, sourceType: self.sourseType)
                        
                         
                     }

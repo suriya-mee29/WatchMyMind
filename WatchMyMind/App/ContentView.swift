@@ -16,7 +16,7 @@ struct ContentView: View {
     @State var dt : UserModel?
     @ObservedObject var activities : ActivitiesListViewModel
     
-    let ar : [AutoActivitiesModel] = [AutoActivitiesModel(createdby: "ww", description: "sss", imageIcon: "play2", title: "test", type: "AUTO", progress: 21, everyDay: true, time: 30, round: 2, NoOfDate: 7),AutoActivitiesModel(createdby: "w222w", description: "s222ss", imageIcon: "play2", title: "test2", type: "AUTO", progress: 21, everyDay: true, time: 30, round: 2, NoOfDate: 7)]
+    let ar : [AutoActivitiesModel] = [AutoActivitiesModel(createdby: "ww", description: "sss", imageIcon: "play2", title: "test", type: "AUTO", progress: 21, everyDay: true, time: 30, round: 2, NoOfDate: 7, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()),AutoActivitiesModel(createdby: "w222w", description: "s222ss", imageIcon: "play2", title: "test2", type: "AUTO", progress: 21, everyDay: true, time: 30, round: 2, NoOfDate: 7, activityPath: "", observedPath: "",startDate: Date(),endDate:Date())]
     
     
     @State var user = User()

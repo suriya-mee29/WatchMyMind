@@ -94,4 +94,47 @@ class AutoActivityStore : ObservableObject {
         }
         
     }
+    
+    public func getData()->[[String:Any]]{
+        if self.autoActivityCollection.count != 0{
+            var newData = [[String:Any]]()
+            for i in 0...(self.autoActivityCollection.count-1){
+                var data = [String:Any]()
+                if self.autoActivityCollection[i].avgHeartRate != nil {
+                    data["avgHeartRate"] = self.autoActivityCollection[i].avgHeartRate
+                }
+                if self.autoActivityCollection[i].heartRate != nil {
+                    data["heartRate"] = self.autoActivityCollection[i].heartRate
+                }
+                
+                if self.autoActivityCollection[i].workOut != nil {
+                    let sample = self.autoActivityCollection[i].workOut
+                    
+                    if let bruned = sample.totalEnergyBurned?.doubleValue(for: .kilocalorie()){
+                        data["bruned"] = bruned
+                    }
+                    if let distance = sample.totalDistance?.doubleValue(for: .meter()){
+                        data["distance"] = distance
+                    }
+                    
+                    if let floors = sample.totalFlightsClimbed?.doubleValue(for: HKUnit.count()){
+                       data["floors"] = floors
+                     }
+                    if let strokeCount = sample.totalSwimmingStrokeCount?.doubleValue(for: HKUnit.count()){
+                      data["strokeCount"] = strokeCount
+                    }
+                    data["date"] = sample.startDate
+                    data["endDate"] = sample.endDate
+                    data["workoutActivityType"] = sample.workoutActivityType.name
+                    data["imageIcon"] = sample.workoutActivityType.associatedIcon
+                    
+                }
+                newData.append(data)
+            }
+            return newData
+        }else{
+            return []
+        }
+        return[]
+    }
 }

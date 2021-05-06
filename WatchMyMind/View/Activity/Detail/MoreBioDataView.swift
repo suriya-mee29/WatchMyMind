@@ -44,11 +44,11 @@ struct MoreBioDataView: View {
                             BioDataCardTitleView(title: "Total distance", imageIcon: "location.north.line", color: Color("wmm"), value: "\(formattedMater) ")
                         }
                        
-                        if let floors = sample?.totalFlightsClimbed{
+                        if let floors = sample?.totalFlightsClimbed?.doubleValue(for: HKUnit.count()){
                             BioDataCardTitleView(title: "Flight Climbed", imageIcon: "arrow.up.right.circle", color: .accentColor, value: "\(floors) floors")
                         }
                         
-                        if let strokeCount = sample?.totalSwimmingStrokeCount{
+                        if let strokeCount = sample?.totalSwimmingStrokeCount?.doubleValue(for: HKUnit.count()){
                             BioDataCardTitleView(title: "Stroke Count", imageIcon: "arrow.uturn.left.circle", color: .accentColor, value: "\(strokeCount)")
         
                         }

@@ -23,6 +23,22 @@ class MindfulnessStore : ObservableObject {
         mindfulnessArr.removeAll()
         mindfulnessArr = newData
     }
+    func getData ()-> [[String:Any]]{
+        var newData = [[String:Any]]()
+        
+        if self.mindfulnessArr.count != 0 {
+        for i in 0...(self.mindfulnessArr.count - 1){
+            let date = self.mindfulnessArr[i].date
+            let time = Int(self.mindfulnessArr[i].time)
+            
+            newData.append(["date":date , "time":time])
+        }
+            return newData
+        }else{
+            return[]
+        }
+      
+    }
     
   
     

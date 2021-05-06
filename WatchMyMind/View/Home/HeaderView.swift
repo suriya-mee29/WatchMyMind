@@ -12,18 +12,58 @@ struct HeaderView: View {
     // MARK: - PROPERTIES
     var healthStore : HealthStore? = HealthStore()
     @State private var isAnimated : Bool = false
+    
     @State private var moveing : Int = 0
     @State private var aSleep : String = "No data"
     @State private var inBad : String = "No data"
     @State private var standing : String = "1.0"
     @State private var steping : Int = 100
+    
     @State private var name : String = ""
+    
+    @Binding var observed : [String]
     
     @Binding var user : User
     @Binding var dt : UserModel?
+    
+    @State private var isSleep = false
+    @State private var isMoving = false
+    @State private var isStanding = false
+    @State private var isStepping = false
+    
+    let currentusername: String
+    
+    
     let locale = Locale.current
     func update1122(  str : String){
        
+    }
+    func upload() {
+        var activities = ActivitiesListViewModel(username: self.currentusername)
+        activities.saveObservedIndicator(aSleep: self.aSleep, inBed: self.inBad, moving: self.moveing, standing: self.standing, stepping: self.steping) { success, msg in
+            
+        }
+       
+    }
+    
+    func fetch() {
+        for indicator in self.observed{
+            if indicator == "sleeping"{
+                self.isSleep = true
+            }
+            if indicator == "stepping" {
+                self.isStepping = true
+                
+            }
+            if indicator == "burning" {
+                self.isMoving = true
+                
+            }
+            if indicator == "standing" {
+                self.isStanding = true
+                
+            }
+        }
     }
 
     // MARK: - BODY
@@ -64,7 +104,7 @@ struct HeaderView: View {
              
                     
                 VStack (alignment: .leading ){
-                    
+                    if isMoving{
                     HStack{
                         Image(systemName: "flame.fill")
                             .font(.title3)
@@ -77,6 +117,8 @@ struct HeaderView: View {
                             .foregroundColor(Color("move"))
                     }
                     .padding(.bottom,1)
+                    }
+                    if isSleep {
                     //in bed
                     HStack{
                         Image(systemName: "bed.double.fill")
@@ -99,6 +141,8 @@ struct HeaderView: View {
                             .foregroundColor(Color("sleep"))
                     }
                     .padding(.bottom,1)
+                    }
+                    if isStanding {
                     HStack{
                         Image(systemName: "figure.stand")
                             .font(.title3)
@@ -109,6 +153,8 @@ struct HeaderView: View {
                             .foregroundColor(Color("stand"))
                     }
                     .padding(.bottom , 1)
+                    }
+                    if isStepping {
                     HStack{
                         Image(systemName: "figure.walk")
                             .font(.title3)
@@ -119,7 +165,7 @@ struct HeaderView: View {
                             .foregroundColor(Color("step"))
                     }
                     .padding(.bottom,1)
-                    
+                    }
                     
                 }
                 .padding(.bottom,30)
@@ -128,8 +174,24 @@ struct HeaderView: View {
             }// VSTACK
             .background(Color("wmm"))
             .clipShape(CustomShape())
-            
-           
+            .onChange(of: self.observed, perform: { value in
+                fetch()
+            })
+            .onChange(of: self.moveing, perform: { value in
+                self.upload()
+            })
+            .onChange(of: self.aSleep, perform: { value in
+                self.upload()
+            })
+            .onChange(of: self.inBad, perform: { value in
+                self.upload()
+            })
+            .onChange(of: self.steping, perform: { value in
+                self.upload()
+            })
+            .onChange(of: self.standing, perform: { value in
+                self.upload()
+            })
             .onAppear(perform: {
                 
                 print("local--> \(locale.languageCode?.description)")
@@ -227,8 +289,11 @@ struct HeaderView: View {
                             
                             
                         }
+                        self.upload()
+                        //---------------
                     }
                 }
+             fetch()
             })
             
         }
@@ -241,7 +306,7 @@ struct HeaderView: View {
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView( user: .constant(User()), dt: .constant(UserModel(timestamp: 2, status: true, message: "ok", data: DataUserModel(type: "std", statusid: "12", statusname: "ok", userName: "name", prefixname: "Mr.", displayname_th: "th", displayname_en: "en", email: "mail", department: "str", faculty: "str"))))
+        HeaderView( observed: .constant([]), user: .constant(User()), dt: .constant(UserModel(timestamp: 2, status: true, message: "ok", data: DataUserModel(type: "std", statusid: "12", statusname: "ok", userName: "name", prefixname: "Mr.", displayname_th: "th", displayname_en: "en", email: "mail", department: "str", faculty: "str"))), currentusername: "6009650026")
             .previewLayout(.sizeThatFits)
             .padding()
     }

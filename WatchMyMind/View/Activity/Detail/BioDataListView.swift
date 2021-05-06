@@ -20,15 +20,19 @@ struct BioDataListView: View {
     var MindfulnessCollection : FetchedResults<Mindfulness>
     @State private var isPresented = true
     @State private var hasdone : Int = 0
+    let autoActivity : AutoActivitiesModel
     
     
     var healthStore = HealthStore()
+    @ObservedObject var avtivityStorage = ActivityStorage()
+    
     // MARK: - CONSTRUCTOR
-    init(headline: String, isActivity : Bool) {
+    init(headline: String, isActivity : Bool,autoActivity : AutoActivitiesModel) {
         self.headLine = headline
         mindfulnessMV = MindfulnessStore(MindfulnessArr: [])
         self.isActivity = isActivity
         autoActivityStore = AutoActivityStore(autoActivityCollection: [])
+        self.autoActivity = autoActivity
     }
    
     // MARK: - FUNCTION
@@ -117,7 +121,7 @@ struct BioDataListView: View {
         .ignoresSafeArea(.all , edges : .top)
        
         .fullScreenCover(isPresented: $isPresented, content: {
-            LoadingView(showModal: self.$isPresented, decription: "please use your Apple Watch to complete an activity by use The Breathe app").environment(\.managedObjectContext, viewContext)
+            LoadingView(showModal: self.$isPresented, isActivity: self.isActivity,  count: self.isActivity ? self.mindfulnessMV.mindfulnessArr.count : self.autoActivityStore.autoActivityCollection.count , activityPath: self.autoActivity.activityPath, decription: "please use your Apple Watch to complete an activity by use The Breathe app").environment(\.managedObjectContext, viewContext)
         })
         .onAppear(perform: {
             fetchData()
@@ -128,6 +132,46 @@ struct BioDataListView: View {
         .onChange(of: isPresented, perform: { value in
            fetchData()
            self.autoActivityStore.loadData(startDate: Date(), numberOfObserved: -30)
+            self.avtivityStorage.activityCount(path: self.autoActivity.activityPath){ success , numberOfCollection in
+                
+                if !isActivity{
+                    // mindfull
+                    print("number of collection ==> \(numberOfCollection)")
+                    print("mindfulness count ==> \(self.mindfulnessMV.mindfulnessArr.count)")
+                    
+                    if numberOfCollection < self.mindfulnessMV.mindfulnessArr.count{
+                        let newData = self.mindfulnessMV.getData()
+                        
+                        self.avtivityStorage.setResults(path: self.autoActivity.activityPath, results: newData) { status, msgg in
+                            if status{
+                                
+                            }else{
+                                
+                            }
+                            
+                        }
+                        
+                     
+                        
+                    }
+                    
+                }else{
+                    //execrise
+                    if numberOfCollection < self.autoActivityStore.autoActivityCollection.count{
+                        let newData = self.autoActivityStore.getData()
+                        
+                        self.avtivityStorage.setResults(path: self.autoActivity.activityPath, results: newData) { status, msgg in
+                            if status{
+                                
+                            }else{
+                                
+                            }
+                        }
+                    }
+                    
+                }
+                
+            }
         })
         
        
@@ -137,7 +181,7 @@ struct BioDataListView: View {
 // MARK: -PREVIEW
 struct BioDataListView_Previews: PreviewProvider {
     static var previews: some View {
-        BioDataListView(headline: "BREATHING", isActivity: true)
+        BioDataListView(headline: "BREATHING", isActivity: true, autoActivity: AutoActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", progress: 2, everyDay: false, time: 20, round: 1, NoOfDate: 5, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()))
             
     }
 }

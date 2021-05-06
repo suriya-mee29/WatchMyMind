@@ -359,7 +359,7 @@ struct ScalingView: View {
 struct ScalingView_Previews: PreviewProvider {
    
     static var previews: some View {
-        ScalingView(isBefore: true, localRoute: [],activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: ""), results: [String : Any]())
+        ScalingView(isBefore: true, localRoute: [],activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any]())
             .preferredColorScheme(.light)
     }
 }

@@ -155,6 +155,6 @@ extension View {
     // MARK: -PREVIEW
 struct NotingView_Previews: PreviewProvider {
     static var previews: some View {
-        NotingView(results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: ""))
+        NotingView(results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()))
     }
 }
