@@ -52,7 +52,7 @@ struct UploadingView: View {
                 ScrollView {
                     //upload pic
                     if isPhoto {
-                    Text("อัพโหลดรูปภาพที่วาด")
+                    Text("select a photo")
                         .font(.title3)
                         .fontWeight(.bold)
                         .padding(.horizontal)
@@ -100,7 +100,7 @@ struct UploadingView: View {
                 
                 //uploadlink
                     if isLink {
-                    Text("อัพโหลดลิงค์ของหนังที่ดูหรือTrailerของหนัง")
+                    Text("attach your link")
                         .font(.title3)
                         .fontWeight(.bold)
                         .padding(.horizontal)

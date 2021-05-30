@@ -70,10 +70,10 @@ struct DescriptionView: View {
                         
                         
                         VStack (alignment: .center){
-                            Text(type == activityType.AUTO ? (activity.everyDay ? "Every day": "Someday, at least \(activity.NoOfDate) days" )
+                            Text(type == activityType.AUTO ? (activity.everyDay ? "\(L10n.DoActivity.everyday)": "\(L10n.DoActivity.someday) \(activity.NoOfDate) \(L10n.DoActivity.days) " )
                                     
                                     
-                                    :(manualActivity.everyDay ? "Every day": "Someday,at least \(manualActivity.NoOfDate) days" ))
+                                    :(manualActivity.everyDay ? "\(L10n.DoActivity.everyday)": "\(L10n.DoActivity.someday) \(manualActivity.NoOfDate) \(L10n.DoActivity.days)" ))
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
                                 .foregroundColor(Color("stand"))
@@ -85,7 +85,7 @@ struct DescriptionView: View {
                                         HStack {
                                             Image(systemName: "clock")
                                                 .foregroundColor(Color("stand"))
-                                            Text("\(activity.time) Mins/Day")
+                                            Text("\(activity.time) \(L10n.DoActivity.minsperday)")
                                                 .font(.system(size: 16))
                                                 .fontWeight(.bold)
                                                 .foregroundColor(Color("stand"))
@@ -96,7 +96,7 @@ struct DescriptionView: View {
                                         HStack {
                                             Image(systemName: "arrow.clockwise")
                                                 .foregroundColor(Color("stand"))
-                                            Text("\(activity.round) Time/Day")
+                                            Text("\(activity.round) \(L10n.DoActivity.timeperday)")
                                                 .font(.system(size: 16))
                                                 .fontWeight(.bold)
                                                 .foregroundColor(Color("stand"))
@@ -109,7 +109,7 @@ struct DescriptionView: View {
                                         HStack {
                                             Image(systemName: "clock")
                                                 .foregroundColor(Color("stand"))
-                                            Text("\(manualActivity.time) Mins/Day")
+                                            Text("\(manualActivity.time) \(L10n.DoActivity.minsperday)")
                                                 .font(.system(size: 16))
                                                 .fontWeight(.bold)
                                                 .foregroundColor(Color("stand"))
@@ -120,7 +120,7 @@ struct DescriptionView: View {
                                         HStack {
                                             Image(systemName: "arrow.clockwise")
                                                 .foregroundColor(Color("stand"))
-                                            Text("\(manualActivity.round) Time/Day")
+                                            Text("\(manualActivity.round) \(L10n.DoActivity.timeperday)")
                                                 .font(.system(size: 16))
                                                 .fontWeight(.bold)
                                                 .foregroundColor(Color("stand"))
@@ -138,14 +138,14 @@ struct DescriptionView: View {
                   Spacer()
                     ScrollView(.vertical, showsIndicators: false, content: {
                         NavigationLink(destination:
-                                        BioDataListView(headline: "BREATHING", isActivity: false, autoActivity: self.activity)
+                                        BioDataListView(headline: L10n.DoActivity.breathing, isActivity: false, autoActivity: self.activity)
                             .environment(\.managedObjectContext, viewContext)
                                        , tag: NavigationTag.TO_BIODATA_VIEW.rawValue, selection: $action){
                             EmptyView()
                             
                         }
                         NavigationLink(destination:
-                                        BioDataListView(headline: "EXERCISE", isActivity: true, autoActivity: self.activity)
+                                        BioDataListView(headline: L10n.DoActivity.execise, isActivity: true, autoActivity: self.activity)
                             .environment(\.managedObjectContext, viewContext)
                                        , tag: 2, selection: $action){
                             EmptyView()
@@ -154,26 +154,26 @@ struct DescriptionView: View {
                         // All populatio of indicator
                         //Attached file view
                         NavigationLink(
-                            destination: AttachedFileView(photoString: manualActivity.photoURL, linkString: manualActivity.link, localRoute: self.router, activity: self.manualActivity, results: self.results),
+                            destination: AttachedFileView(photoString: manualActivity.photoURL, linkString: manualActivity.link, isNext: true, localRoute: self.router, activity: self.manualActivity, results: self.results),
                             tag: NavigationTag.TO_ATTACHED_VIEW.rawValue,
                             selection: $action ,
                             label: {EmptyView()})
                             .isDetailLink(false)
                         // Scalling view
                         NavigationLink(
-                            destination: ScalingView(isBefore: true, localRoute: self.router,activity: self.manualActivity, results: self.results),
+                            destination: ScalingView(photoString :"",linkString : "" , isBefore: true, localRoute: self.router,activity: self.manualActivity, results: self.results),
                             tag: NavigationTag.TO_SCALING_VIEW.rawValue,
                             selection: $action,
                             label: {EmptyView()})
                         //Heart rate and timer view
                         NavigationLink(
-                            destination: HeartRateView(localRoute: self.router, activity: self.manualActivity, results: self.results),
+                            destination: HeartRateView(localRoute: self.router, activity: self.manualActivity, results: self.results , photoString : "" , linkString : ""),
                             tag: NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue,
                             selection: $action,
                             label: {EmptyView()})
                         // Nitting view
                         NavigationLink(
-                            destination: NotingView( results: self.results, activity: self.manualActivity),
+                            destination: NotingView( photoString : "" ,linkString : "" ,results: self.results, activity: self.manualActivity),
                             tag: NavigationTag.TO_NOTING_VIEW.rawValue,
                             selection: $action,
                             label: {EmptyView()})
@@ -262,7 +262,7 @@ struct DescriptionView: View {
                         
                     }, label: {
                         HStack{
-                            Text("start".uppercased())
+                            Text(L10n.Placeholder.start.uppercased())
                                 .fontWeight(.bold)
                                 .padding()
                                 .font(.title2)

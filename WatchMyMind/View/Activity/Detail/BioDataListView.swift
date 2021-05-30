@@ -87,7 +87,7 @@ struct BioDataListView: View {
                     
                     if !isActivity {
                     ForEach(self.mindfulnessMV.mindfulnessArr){ data in
-                        BioDataCardIView(title: "breathing", imageIcon: "lungs", value: "\(data.time)", date: data.date)
+                        BioDataCardIView(title: "breathing", imageIcon: "lungs", value: "\(data.time) mins", date: data.date)
                         
                     }//: LOOP
                     }else{
@@ -121,7 +121,7 @@ struct BioDataListView: View {
         .ignoresSafeArea(.all , edges : .top)
        
         .fullScreenCover(isPresented: $isPresented, content: {
-            LoadingView(showModal: self.$isPresented, isActivity: self.isActivity,  count: self.isActivity ? self.mindfulnessMV.mindfulnessArr.count : self.autoActivityStore.autoActivityCollection.count , activityPath: self.autoActivity.activityPath, decription: "please use your Apple Watch to complete an activity by use The Breathe app").environment(\.managedObjectContext, viewContext)
+            LoadingView(showModal: self.$isPresented, isActivity: self.isActivity,  count: self.isActivity ? self.mindfulnessMV.mindfulnessArr.count : self.autoActivityStore.autoActivityCollection.count , activityPath: self.autoActivity.activityPath, decription: "please use your Apple Watch to complete an activity").environment(\.managedObjectContext, viewContext)
         })
         .onAppear(perform: {
             fetchData()

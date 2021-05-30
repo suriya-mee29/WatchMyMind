@@ -78,6 +78,7 @@ struct HomeView: View {
                                     }
                                     
                                 }
+                                
                             } content : {
                                 ScrollView(.vertical, showsIndicators: false, content: {
                                     //AUTO ACTIVITY
@@ -118,7 +119,7 @@ struct HomeView: View {
                                         
                                     }, label: {
                                         HStack {
-                                            Text("logout".uppercased())
+                                            Text(L10n.Placeholder.logout.uppercased())
                                                 .fontWeight(.bold)
                                             Image(systemName: "chevron.forward.square")
                                                 
@@ -147,7 +148,39 @@ struct HomeView: View {
                 
            
             }else{
-                WatingView(status: $ststus, userName: dt?.data.userName ?? usernameCurrentUser)
+                VStack {
+                    WatingView(status: $ststus, userName: dt?.data.userName ?? usernameCurrentUser)
+                    Button(action: {
+                        do {
+                          try Auth.auth().signOut()
+                            isAuthen = false
+                            let userDefults = UserDefaults.standard
+                            do {
+                                var userData = try userDefults.getObject(forKey: "userData", castTo: UserModel.self)
+                                if userData != nil {
+                                    userData.status = false
+                                    try userDefults.setObject(userData, forKey: "userData")
+                                    print("save user data")
+                                }
+
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            
+                        } catch{
+                            print("\(error.localizedDescription)")
+                            
+                        }
+                        
+                    }, label: {
+                        HStack {
+                            Text(L10n.Placeholder.logout.uppercased())
+                                .fontWeight(.bold)
+                            Image(systemName: "chevron.forward.square")
+                                
+                        }
+                    })
+                }
             }
             
         }

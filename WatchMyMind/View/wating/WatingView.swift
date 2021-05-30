@@ -19,7 +19,6 @@ struct WatingView: View {
                 
                 user.getUserSatus(username: userName){ st in
                     status = st
-                    print("com")
                     completion()
                 }
                
@@ -40,7 +39,7 @@ struct WatingView: View {
                         .padding(.vertical)
                     
                     VStack {
-                        Text("Please contact the Psychologist to confirm a new client.")
+                        Text(L10n.DoActivity.contact)
                             .font(.system(size: 16))
                             .font(.footnote)
                             .padding(.horizontal)

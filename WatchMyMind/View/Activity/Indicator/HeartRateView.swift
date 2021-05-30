@@ -51,6 +51,17 @@ struct HeartRateView: View {
     @State var alertMessage : String = ""
     @State var headerMag : String = ""
     
+    let photoString : String
+    let linkString : String
+    @State  var showAttchedFile : Bool = false
+    
+    func isEmpty() -> Bool {
+        if self.photoString == "" || self.linkString == "" {
+            return false
+        }else{
+            return true
+        }
+    }
     // MARK: - BODY
     var body: some View {
         ZStack {
@@ -76,14 +87,53 @@ struct HeartRateView: View {
                     .zIndex(1.0)
                     
                     VStack{
+                      
+                        if self.photoString != "" || self.linkString != "" {
+                            ZStack {
+                                ZStack {
+                                    Button(action: {
+                                    self.showAttchedFile.toggle()
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: "filemenu.and.cursorarrow")
+                                            .font(.title3)
+                                            .foregroundColor(.white)
+                                        Text("activity file".uppercased())
+                                            .font(.title3)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.white)
+                                    }
+                                })
+                                    .padding()
+                                   
+                                }
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12).stroke(Color.white,lineWidth: 2))
+                               
+                            }
+                            .padding(.top, 200)
+                            Text(stopwatch.message)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(width : UIScreen.main.bounds.width)
+                            
+                        }else{
+                            Text(stopwatch.message)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(width : UIScreen.main.bounds.width)
+                                .padding(.top , 200)
+                            
+                        }
+                        
+                        
                        
-                        Text(stopwatch.message)
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(width : UIScreen.main.bounds.width)
-                            .padding(.top,200)
+                            
+                          
                             
                         Button(action: {
                             if stopwatch.isRunning {
@@ -199,19 +249,18 @@ struct HeartRateView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 20).stroke(Color.gray,lineWidth: 1)
                         )
-                        
-                     
+                       
                         Spacer()
                         ScrollView(.vertical, showsIndicators: false, content: {
                             //afetr scaling view
                             NavigationLink(
-                                destination: ScalingView(isBefore: false, localRoute: self.route,activity: self.activity, results: self.results),
+                                destination: ScalingView(photoString : self.photoString , linkString : self.linkString ,isBefore: false, localRoute: self.route,activity: self.activity, results: self.results),
                                 tag: NavigationTag.TO_SCALING_VIEW.rawValue,
                                 selection: $action,
                                 label: {EmptyView()})
                             // noting view
                             NavigationLink(
-                                destination: NotingView(results: self.results, activity: self.activity),
+                                destination: NotingView(photoString : self.photoString , linkString: self.linkString ,results: self.results, activity: self.activity),
                                 tag: NavigationTag.TO_NOTING_VIEW.rawValue,
                                 selection: $action,
                                 label: {EmptyView()})
@@ -254,6 +303,9 @@ struct HeartRateView: View {
                 
             })
         } //: ZSTACK
+        .sheet(isPresented: self.$showAttchedFile, content: {
+            AttachedFileView(photoString: self.photoString, linkString: self.linkString, isNext: false, localRoute: [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "", startDate: Date(), endDate: Date()), results: [String : Any]())
+        })
         .ignoresSafeArea(.all,edges: .all)
         .alert(isPresented: $showAlert , content: {
             Alert(title: Text(self.headerMag.uppercased()), message: Text("\(self.alertMessage)"), dismissButton: .default(Text("OK!")))
@@ -264,7 +316,7 @@ struct HeartRateView: View {
 // MARK: -PREVIEW
 struct HeartRateView_Previews: PreviewProvider {
     static var previews: some View {
-        HeartRateView(localRoute: [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any]())
+        HeartRateView(localRoute: [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any](), photoString: "", linkString: "")
             .preferredColorScheme(.light)
             
     }

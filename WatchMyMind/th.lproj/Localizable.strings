@@ -21,3 +21,17 @@
 
 "vc.header.autoactivity" = "กิจกรรมแบบสำเร็จ";
 "vc.header.manualctivity" = "กิจกรรมแบบสร้าง";
+
+"vc.control.login" = "ออกจากระบบ";
+"vc.control.start" = "เริ่ม";
+"vc.watting.header" = "กรุณารอการยืนยันเพื่อเข้ารับบริการ";
+
+"vc.activity.message" = "โปรดติดต่อนักจิตวิทยาเพื่อยืนยันการเข้ารับบริการ";
+"vc.activity.description.everyday" = "ทำทุกวัน";
+"vc.activity.description.someday" = "ทำบางวันอย่างน้อย";
+"vc.activity.description.days" = "วัน";
+"vc.activity.description.minsperday" = "นาที/วัน";
+"vc.activity.description.timeperday" = "รอบ/วัน";
+"vc.activity.description.breathing" = "การฝึกหายใจ";
+"vc.activity.description.execise" = "การออกกำลังกาย";
+

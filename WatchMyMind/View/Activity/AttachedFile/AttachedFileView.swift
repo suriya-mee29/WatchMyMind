@@ -10,6 +10,7 @@ import SwiftUI
 struct AttachedFileView: View {
     let photoString : String
     let linkString : String
+    let isNext : Bool
     
     @State var route : [String] = []
     let  localRoute : [String]
@@ -70,6 +71,7 @@ struct AttachedFileView: View {
                 
                 HStack{
                     Spacer()
+                    if isNext {
                     Button(action:{
                         var ac = 0
                         for i in 0...(self.route.count - 1) {
@@ -120,6 +122,7 @@ struct AttachedFileView: View {
                     })
                     .background(Color("wmm"))
                     .clipShape(Capsule())
+                    }
                     Spacer()
                 }
                 ScrollView(.vertical, showsIndicators: false, content: {
@@ -127,20 +130,20 @@ struct AttachedFileView: View {
                     //Attached file view
                     // Scalling view
                     NavigationLink(
-                        destination: ScalingView(isBefore: true, localRoute: self.route,activity: self.activity, results: self.results),
+                        destination: ScalingView(photoString: self.photoString , linkString : self.linkString , isBefore: true, localRoute: self.route,activity: self.activity, results: self.results),
                         tag: NavigationTag.TO_SCALING_VIEW.rawValue,
                         selection: $action,
                         label: {EmptyView()})
                     //Heart rate and timer view
                     NavigationLink(
-                        destination: HeartRateView(localRoute: self.route,activity: self.activity, results: self.results),
+                        destination: HeartRateView(localRoute: self.route,activity: self.activity, results: self.results,photoString : self.photoString , linkString : self.linkString),
                         tag: NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue,
                         selection: $action,
                         label: {EmptyView()})
                         .isDetailLink(false)
                     // Nitting view
                     NavigationLink(
-                        destination: NotingView(results: self.results, activity: self.activity),
+                        destination: NotingView(photoString :  self.photoString , linkString : self.linkString,results: self.results, activity: self.activity),
                         tag: NavigationTag.TO_NOTING_VIEW.rawValue,
                         selection: $action,
                         label: {EmptyView()})
@@ -163,6 +166,6 @@ struct AttachedFileView: View {
 struct AttachedFileView_Previews: PreviewProvider {
     static var previews: some View {
         AttachedFileView(photoString: "https://firebasestorage.googleapis.com/v0/b/watchmymind-9a4de.appspot.com/o/attachedFiles%2F9565BEE7-C227-4CDD-8A87-1D1E2086959C.jpg?alt=media&token=4f0d8d8f-f36a-4358-8615-aacb372e7581"
-                         , linkString: "https://www.youtube.com/watch?v=e-ORhEE9VVg&list=RD0EVVKs6DQLo&index=27", localRoute:  [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any]())
+                         , linkString: "https://www.youtube.com/watch?v=e-ORhEE9VVg&list=RD0EVVKs6DQLo&index=27", isNext: true, localRoute:  [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any]())
     }
 }

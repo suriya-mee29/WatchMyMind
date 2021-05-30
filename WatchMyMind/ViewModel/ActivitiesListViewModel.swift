@@ -211,7 +211,6 @@ class ActivitiesListViewModel : ObservableObject{
                             
                             
                             for AssignmentDocument in querySnapshot!.documents {
-                               // print("\(AssignmentDocument.documentID) => \(AssignmentDocument.data())")
                                 
                                 if let startTimestamp =  AssignmentDocument.data()["startDate"] as? Timestamp {
                                     self.startDate = startTimestamp.dateValue()
@@ -270,7 +269,7 @@ class ActivitiesListViewModel : ObservableObject{
                                                                 enddate = endTM.dateValue()
                                                             }
                                                 
-                                                            let autoActivityTemp = AutoActivitiesModel(createdby: createdby!, description: description!, imageIcon: imageIcon!, title: title!, type: type!, progress: progress!, everyDay: everyDay!, time: time!, round: round!, NoOfDate: NoOFDate, activityPath: path, observedPath: obPath,startDate: startdate,endDate:enddate)
+                                                            let autoActivityTemp = AutoActivitiesModel(createdby: createdby!, description: description!, imageIcon: imageIcon!, title: title!, type: type!, progress: progress ?? 0, everyDay: everyDay!, time: time!, round: round!, NoOfDate: NoOFDate, activityPath: path, observedPath: obPath,startDate: startdate,endDate:enddate)
                                                             self.autoActivities?.append(autoActivityTemp)
                                                             
                                                         }else{
@@ -330,7 +329,7 @@ class ActivitiesListViewModel : ObservableObject{
                                                                 enddate = endTM.dateValue()
                                                             }
         
-                                                            let manualActivityTemp = ManualActivitiesModel(createdby: createdby, description: description!, imageIcon: imageIcon!, title: title!, type: type!, link: link, photoURL: photoURL, indicator: indicators!, progress: progress!,everyDay: everyDay!, time: time! , round: round! , NoOfDate : NoOFDate,outcomeReq: outcomeRequest, activityPath: path, observedPath: obPath,startDate: startdate,endDate:enddate)
+                                                            let manualActivityTemp = ManualActivitiesModel(createdby: createdby, description: description!, imageIcon: imageIcon!, title: title!, type: type!, link: link, photoURL: photoURL, indicator: indicators!, progress: progress ?? 0,everyDay: everyDay!, time: time! , round: round! , NoOfDate : NoOFDate,outcomeReq: outcomeRequest, activityPath: path, observedPath: obPath,startDate: startdate,endDate:enddate)
                                                             
                                                             self.manualActivities?.append(manualActivityTemp)
                                                             

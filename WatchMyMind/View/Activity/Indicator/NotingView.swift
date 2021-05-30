@@ -9,6 +9,8 @@ import SwiftUI
 
 struct NotingView: View {
     // MARK: - PROPERTIES
+    let photoString : String
+    let linkString : String
     @State private var inputText : String = ""
     @State private var countText : Int = 0
     @State var action : Int? = 0
@@ -19,10 +21,11 @@ struct NotingView: View {
     @State var headerMag : String = ""
     
     let activity : ManualActivitiesModel
-  
     
     @ObservedObject var textRecognition = TextRecognition()
     @ObservedObject var activityStorage = ActivityStorage()
+    @State  var showAttchedFile : Bool = false
+    
     // MARK: - BODY
     var body: some View {
         ZStack (alignment: .topTrailing){
@@ -42,6 +45,26 @@ struct NotingView: View {
                     .font(.title2)
                     .fontWeight(.regular)
                     .padding(.top)
+                if self.photoString != "" || self.linkString != ""{
+                    ZStack {
+                        Button(action: {
+                        self.showAttchedFile.toggle()
+                    }, label: {
+                        HStack {
+                            Image(systemName: "filemenu.and.cursorarrow")
+                                .font(.title3)
+                            Text("activity file".uppercased())
+                                .font(.title3)
+                                .fontWeight(.bold)
+                              
+                        }
+                    })
+                        .padding()
+                       
+                    }
+                    .background(
+                        RoundedRectangle(cornerRadius: 12).stroke(Color("wmm"),lineWidth: 2))
+                }
               
                 TextEditor(text: $inputText)
                     .font(.body)
@@ -135,6 +158,9 @@ struct NotingView: View {
             }
                 
         }//: ZSTACK
+        .sheet(isPresented: self.$showAttchedFile, content: {
+            AttachedFileView(photoString: self.photoString, linkString: self.linkString, isNext: false, localRoute: [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "", startDate: Date(), endDate: Date()), results: [String : Any]())
+        })
         .ignoresSafeArea(.all,edges: .all)
         .onAppear(perform: {
             action = 0
@@ -155,6 +181,6 @@ extension View {
     // MARK: -PREVIEW
 struct NotingView_Previews: PreviewProvider {
     static var previews: some View {
-        NotingView(results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()))
+        NotingView(photoString: "", linkString:"https://www.youtube.com/watch?v=7bkHtMw620M", results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()))
     }
 }

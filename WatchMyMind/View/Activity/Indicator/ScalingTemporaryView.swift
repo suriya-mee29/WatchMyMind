@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct ScalingTemporaryView: View {
+    let photoString : String
+    let linkString : String
     @Environment(\.colorScheme) var colorScheme
     @State var action : Int? = 0
     @State var route : [String] = []
     let localRoute : [String]
     @State var results : [String:Any]
+    @State  var showAttchedFile : Bool = false
     
     let activity : ManualActivitiesModel
     var body: some View {
@@ -25,11 +28,31 @@ struct ScalingTemporaryView: View {
                 .resizable()
                 .scaledToFit()
                 .padding()
+            if self.photoString != "" || self.linkString != ""{
+                ZStack {
+                    Button(action: {
+                    self.showAttchedFile.toggle()
+                }, label: {
+                    HStack {
+                        Image(systemName: "filemenu.and.cursorarrow")
+                            .font(.title3)
+                        Text("activity file".uppercased())
+                            .font(.title3)
+                            .fontWeight(.bold)
+                          
+                    }
+                })
+                    .padding()
+                   
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 12).stroke(Color("wmm"),lineWidth: 2))
+            }
             Spacer()
             
             ScrollView(.vertical, showsIndicators: false, content: {
                 NavigationLink(
-                    destination: ScalingView(isBefore: false, localRoute: self.route,activity: self.activity, results: self.results ) ,
+                    destination: ScalingView(photoString : self.photoString ,linkString : self.linkString , isBefore: false, localRoute: self.route,activity: self.activity, results: self.results ) ,
                     tag: NavigationTag.TO_SCALING_VIEW.rawValue,
                     selection: $action,
                     label: {EmptyView()})
@@ -61,12 +84,15 @@ struct ScalingTemporaryView: View {
             self.route = localRoute
             
         })
+        .sheet(isPresented: self.$showAttchedFile, content: {
+            AttachedFileView(photoString: self.photoString, linkString: self.linkString, isNext: false, localRoute: [], activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "", startDate: Date(), endDate: Date()), results: [String : Any]())
+        })
     }
 }
 
 struct ScalingTemporaryView_Previews: PreviewProvider {
     static var previews: some View {
-        ScalingTemporaryView( localRoute: [] , results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()))
+        ScalingTemporaryView( photoString : "" , linkString : "https://www.youtube.com/watch?v=7bkHtMw620M" ,localRoute: [] , results: [String : Any](), activity:  ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()))
             
     }
 }

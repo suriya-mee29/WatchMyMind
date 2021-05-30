@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum Scaling : String {
+    
     case NO_PAIN = "NO PAIN"
     case MILD_PAIN = "MILD PAIN"
     case MODERATE = "MODERATE"
@@ -17,6 +18,9 @@ enum Scaling : String {
 
 struct ScalingView: View {
     // MARK: - PROPERTIES
+    let photoString : String
+    let linkString : String
+    
     let isBefore : Bool
     let localRoute : [String]
     @State var action : Int? = 0
@@ -230,13 +234,13 @@ struct ScalingView: View {
                     ScrollView(.vertical, showsIndicators: false, content: {
                         //Temprorary
                         NavigationLink(
-                            destination: ScalingTemporaryView( localRoute: self.route , results: self.results, activity: self.activity),
+                            destination: ScalingTemporaryView(photoString :self.photoString ,linkString: self.linkString ,localRoute: self.route , results: self.results, activity: self.activity),
                             tag: NavigationTag.TEMPORARY.rawValue,
                             selection: $action,
                             label: {EmptyView()})
                         //HeartRate and Timer
                         NavigationLink(
-                            destination: HeartRateView(localRoute: self.route, activity: self.activity, results: self.results),
+                            destination: HeartRateView(localRoute: self.route, activity: self.activity, results: self.results , photoString : self.photoString , linkString : self.linkString),
                             tag: NavigationTag.TO_HEART_RATE_AND_TIMER_VIEW.rawValue,
                             selection: $action,
                             label: {EmptyView()})
@@ -244,7 +248,7 @@ struct ScalingView: View {
                         //After Possibility route
                         //Noting
                         NavigationLink(
-                            destination: NotingView( results: self.results, activity: self.activity),
+                            destination: NotingView( photoString : self.photoString ,linkString : self.linkString,results: self.results, activity: self.activity),
                             tag: NavigationTag.TO_NOTING_VIEW.rawValue,
                             selection: $action,
                             label: {EmptyView()})
@@ -359,7 +363,7 @@ struct ScalingView: View {
 struct ScalingView_Previews: PreviewProvider {
    
     static var previews: some View {
-        ScalingView(isBefore: true, localRoute: [],activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any]())
+        ScalingView(photoString: "" ,linkString: "",isBefore: true, localRoute: [],activity: ManualActivitiesModel(createdby: "", description: "", imageIcon: "", title: "", type: "", everyDay: false, time: 0, round: 0, activityPath: "", observedPath: "",startDate: Date(),endDate:Date()), results: [String : Any]())
             .preferredColorScheme(.light)
     }
 }

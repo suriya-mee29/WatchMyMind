@@ -24,5 +24,19 @@
 "vc.header.autoactivity" = "auto activity";
 "vc.header.manualctivity" = "manual activity";
 
+"vc.control.login" = "logout";
+"vc.control.start" = "start";
+"vc.watting.header" = "waiting";
+
+"vc.activity.message" = "Please contact the Psychologist to confirm a new client.";
+"vc.activity.description.everyday" = "Every day";
+"vc.activity.description.someday" = "Someday, at least";
+"vc.activity.description.days" = "days";
+"vc.activity.description.minsperday" = "Mins/Day";
+"vc.activity.description.timeperday" = "Time/Day";
+//auto activity
+"vc.activity.description.breathing" = "BREATHING";
+"vc.activity.description.execise" = "EXERCISE";
+
 
 
